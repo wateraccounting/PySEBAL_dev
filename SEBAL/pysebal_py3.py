@@ -25,7 +25,6 @@ import numpy.polynomial.polynomial as poly
 from openpyxl import load_workbook
 from pyproj import Proj, transform
 import warnings
-import platform
 
 def SEBALcode(number,inputExcel):
   
@@ -83,10 +82,11 @@ def SEBALcode(number,inputExcel):
         src_FileName_Ref = os.path.join(input_folder, '%s.hdf' %Name_MODIS_Image_Ref)  
     
         # Calibartion constants Hot Pixels extracted from the excel file 
-        Hot_Pixel_Constant = float(ws['E%d' %number].value)          # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for VIIRS images)
+        # Old constants now put as zero
+        Hot_Pixel_Constant = 0        # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for VIIRS images)
         
         # Calibartion constants Cold Pixels from the excel file 					
-        Cold_Pixel_Constant = float(ws['F%d' %number].value)         # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for VIIRS images)
+        Cold_Pixel_Constant = 0        # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for VIIRS images)
         
         # Pixel size of the model
         pixel_spacing = int(250) 	
@@ -117,10 +117,10 @@ def SEBALcode(number,inputExcel):
         Name_PROBAV_Image = '%s' %str(ws['D%d' %number].value)    # Must be a tiff file 
  
         # Calibartion constants Hot Pixels extracted from the excel file 
-        Hot_Pixel_Constant = float(ws['E%d' %number].value)          # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for VIIRS images)
+        Hot_Pixel_Constant = 0          # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for VIIRS images)
         
         # Calibartion constants Cold Pixels from the excel file 					
-        Cold_Pixel_Constant = float(ws['F%d' %number].value)         # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for VIIRS images)
+        Cold_Pixel_Constant = 0        # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for VIIRS images)
         
         # Pixel size of the model
         pixel_spacing = int(100) 	
@@ -149,13 +149,19 @@ def SEBALcode(number,inputExcel):
                                     
                                                              # temperature: 1 = Band 6 for LS_5 & 7, Band 10 for LS_8 (optional)
         # Calibartion constants Hot Pixels from the excel file 
-        Hot_Pixel_Constant = float(ws['E%d' %number].value)          # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for Landsat images)
+        # Old constants, has been changed to other inputs in excel sheet
+        Hot_Pixel_Constant = 0          # Hot Pixel Value = Mean_Hot_Pixel + Hot_Pixel_Constant * Std_Hot_Pixel (only for Landsat images)
   
         # Calibartion constants Cold Pixels from the excel file 
-        Cold_Pixel_Constant = float(ws['F%d' %number].value)         # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for Landsat images)
-
+        Cold_Pixel_Constant = 0         # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for Landsat images)
+        # NEW variables from excel sheet (Landsat_Input)
+        NDVIhot_low = float(ws['G%d' %number].value)            # Lower NDVI treshold for hot pixels
+        NDVIhot_high = float(ws['H%d' %number].value)              # Higher NDVI treshold for hot pixels
+        tcoldmin = float(ws['E%d' %number].value)
+        tcoldmax = float(ws['F%d' %number].value)
+        temp_lapse = float(ws['I%d' %number].value)
         # Pixel size of the model
-        pixel_spacing = int(30) 
+        pixel_spacing = int(30)
 							
         # Print data used from sheet General_Input
         print('Landsat Input:')			
@@ -408,8 +414,8 @@ def SEBALcode(number,inputExcel):
         h_obst_kind_of_data=1                  # Obstacle height (m) -Replace for map based on Land use?
         print('Map to the Obstacle height = %s' %(h_obst_name))
 											
-    NDVIhot_low = 0.03               # Lower NDVI treshold for hot pixels
-    NDVIhot_high = 0.20              # Higher NDVI treshold for hot pixels
+    #NDVIhot_low = 0.03               # Lower NDVI treshold for hot pixels
+    #NDVIhot_high = 0.20              # Higher NDVI treshold for hot pixels
     print('Lower NDVI treshold for hot pixels = %s' %(NDVIhot_low))			
     print('Higher NDVI treshold for hot pixels = %s' %(NDVIhot_high))					
 			
@@ -791,6 +797,7 @@ def SEBALcode(number,inputExcel):
     print('---------------------------------------------------------')
     #pdb.set_trace()
     if Image_Type == 2:
+
         # Rounded difference of the local time from Greenwich (GMT) (hours):
         delta_GTM = round(np.sign(lon[nrow/2, ncol/2]) * lon[nrow/2, ncol/2] * 24 / 360)
         if np.isnan(delta_GTM) == True:
@@ -1004,7 +1011,7 @@ def SEBALcode(number,inputExcel):
     # Computation of some vegetation properties
     # 1)
     #constants:
-    Temp_lapse_rate = 0.0085  # Temperature lapse rate (°K/m) - 0.0065(ORI)
+    Temp_lapse_rate = temp_lapse  # Temperature lapse rate (°K/m) - 0.0065(ORI)
     Gsc = 1367        # Solar constant (W / m2)   
     SB_const = 5.6703E-8  # Stefan-Bolzmann constant (watt/m2/°K4)
         
@@ -1267,7 +1274,7 @@ def SEBALcode(number,inputExcel):
         print('---------------------------------------------------------')
         print('-------------------- Module 4 ---------------------------')
         print('---------------------------------------------------------')
-        
+ 
         # Check if a surface temperature dataset is defined. If so use this one instead of the Landsat, otherwise Landsat
  
         # Check Surface temperature	
@@ -1342,14 +1349,14 @@ def SEBALcode(number,inputExcel):
             
 		   # save landsat surface temperature
             surf_temp_fileName = os.path.join(output_folder, 'Output_vegetation','%s_%s_surface_temp_sharpened_%s_%s_%s.tif' %(sensor1, sensor2, res2, year, DOY))
-            save_GeoTiff_proy(lsc, temp_surface_sharpened, surf_temp_fileName, shape_lsc, nband=1)				
+            save_GeoTiff_proy(lsc, temp_surface_sharpened, surf_temp_fileName, shape_lsc, nband=1)			
         # remove low temperature values
         temp_surface_sharpened[temp_surface_sharpened<=253.0]=np.nan
 		
         # Calculate the tempearture of the water       							
         Temperature_water_std=np.nanstd(temp_surface_sharpened[water_mask != 0])
         Temperature_water_mean=np.nanmean(temp_surface_sharpened[water_mask != 0])
-        
+      
         print('Mean water Temperature = %0.3f (K)' % Temperature_water_mean)
         print('Standard deviation water temperature = %0.3f (K)' % Temperature_water_std)
         # Check if Quality dataset is defined. If so use this one instead of using Landsat otherwise landsat
@@ -1457,7 +1464,7 @@ def SEBALcode(number,inputExcel):
                 else:
                     SEBAL_env_paths = os.environ["SEBAL"]
                     GDAL_env_path = SEBAL_env_paths
-                    GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate') 
+                    GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate')
                 # run gdal translate command               
                 FullCmd = '%s -of GTiff %s %s' %(GDAL_TRANSLATE, name_in, name_out)            
                 os.system(FullCmd)
@@ -2471,7 +2478,7 @@ def SEBALcode(number,inputExcel):
     ts_dem_cold_veg = Calc_Cold_Pixels_Veg(NDVI,NDVI_max,NDVI_std, QC_Map,ts_dem,Image_Type, Cold_Pixel_Constant)
      
     # Cold pixels water						
-    ts_dem_cold,cold_pixels,ts_dem_cold_mean = Calc_Cold_Pixels(ts_dem,water_mask,QC_Map,ts_dem_cold_veg,Cold_Pixel_Constant)
+    ts_dem_cold,cold_pixels,ts_dem_cold_mean = Calc_Cold_Pixels(ts_dem,tcoldmin,tcoldmax,water_mask,QC_Map,ts_dem_cold_veg,Cold_Pixel_Constant)
     if np.isnan(ts_dem_cold) == True:
         ts_dem_cold = Temp_inst
    
@@ -3053,7 +3060,7 @@ def Calc_Hot_Pixels(ts_dem,QC_Map, water_mask, NDVI,NDVIhot_low,NDVIhot_high,Hot
     return(ts_dem_hot,hot_pixels)    
     
 #------------------------------------------------------------------------------    
-def Calc_Cold_Pixels(ts_dem,water_mask,QC_Map,ts_dem_cold_veg,Cold_Pixel_Constant):
+def Calc_Cold_Pixels(ts_dem,tcoldmin,tcoldmax,water_mask,QC_Map,ts_dem_cold_veg,Cold_Pixel_Constant):
     """
     Function to calculates the the cold pixels based on the surface temperature
     """ 
@@ -3061,8 +3068,8 @@ def Calc_Cold_Pixels(ts_dem,water_mask,QC_Map,ts_dem_cold_veg,Cold_Pixel_Constan
     for_cold[water_mask != 1.0] = 0.0
     for_cold[QC_Map != 0] = 0.0
     cold_pixels = np.copy(for_cold)
-    cold_pixels[for_cold < 285.0] = np.nan
-    cold_pixels[for_cold > 320.0] = np.nan
+    cold_pixels[for_cold < tcoldmin] = np.nan
+    cold_pixels[for_cold > tcoldmax] = np.nan
     # cold_pixels[for_cold < 285.0] = 285.0
     ts_dem_cold_std = np.nanstd(cold_pixels)     # Standard deviation
     ts_dem_cold_min = np.nanmin(cold_pixels)     # Min
@@ -3483,19 +3490,13 @@ def Calc_Ra_Mountain(lon,DOY,hour,minutes,lon_proy,lat_proy,slope,aspect):
     # 1. Calculation of extraterrestrial solar radiation for slope and aspect
     # Computation of Hour Angle (HRA = w)
     B = 360./365 * (DOY-81)           # (degrees)
-    print('   TEST: ', B)
     # Computation of cos(theta), where theta is the solar incidence angle
     # relative to the normal to the land surface
     delta=np.arcsin(np.sin(23.45*deg2rad)*np.sin(np.deg2rad(B))) # Declination angle (radians)
-    print('   TEST2: ', delta)
     phi = lat_proy * deg2rad                                     # latitude of the pixel (radians)
-    print('   TEST3: ', phi)
     s = slope * deg2rad                                          # Surface slope (radians)
-    print('   TEST4: ', s)
     gamma = (aspect-180) * deg2rad                               # Surface aspect angle (radians)
-    print('   TEST5: ', gamma)
     w=w_time(Loc_time, lon_proy, DOY)                            # Hour angle (radians)
-    print('   TEST6: ', w_time)
     a,b,c = Constants(delta,s,gamma,phi)
     cos_zn= AngleSlope(a,b,c,w)
     cos_zn = cos_zn.clip(Min_cos_zn, Max_cos_zn)
@@ -4254,16 +4255,20 @@ def reproject_MODIS(input_name, output_name, epsg_to):
     '''                    
     
     # Get environmental variable
-    SEBAL_env_paths = os.environ["SEBAL"].split(';')
-    GDAL_env_path = SEBAL_env_paths[0]
-    GDALWARP_PATH = os.path.join(GDAL_env_path, 'gdalwarp.exe')
-
+    if platform.system() == 'Windows':
+        SEBAL_env_paths = os.environ["SEBAL"].split(';')
+        GDAL_env_path = SEBAL_env_paths[0]
+        GDALWARP_PATH = os.path.join(GDAL_env_path, 'gdalwarp.exe')
+    else:
+        SEBAL_env_paths = os.environ["SEBAL"]
+        GDAL_env_path = SEBAL_env_paths
+        GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate')
     split_input = input_name.split('hdf":')
     inputname = '%shdf":"%s"' %(split_input[0],split_input[1])
 
     # find path to the executable
     fullCmd = ' '.join(["%s" %(GDALWARP_PATH), '-overwrite -s_srs "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"', '-t_srs EPSG:%s -of GTiff' %(epsg_to), inputname, output_name])   
-    Run_command_window(fullCmd)
+    os.system(fullCmd)
 				
     return()  
 
