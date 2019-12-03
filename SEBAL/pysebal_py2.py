@@ -7,7 +7,7 @@ pySEBAL_3.3.7.1
          UNESCO-IHE
          September 2017
 """
-import pdb
+import platform
 import sys
 import os
 import re
@@ -1448,14 +1448,18 @@ def SEBALcode(number,inputExcel):
                 name_out = os.path.join(input_folder, '%s_test.tif' % (Name_PROBAV_Image))   
                 name_in = g.GetSubDatasets()[Band_number[bandnmr]][0]
                 
-                # Get environmental variable
-                SEBAL_env_paths = os.environ["SEBAL"].split(';')
-                GDAL_env_path = SEBAL_env_paths[0]
-                GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate.exe')
- 
+                # Get environmental variable for windows and Linux 
+                if platform.system() == 'Windows':
+                    SEBAL_env_paths = os.environ["SEBAL"].split(';')
+                    GDAL_env_path = SEBAL_env_paths[0]
+                    GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate.exe')
+                else:
+                    SEBAL_env_paths = os.environ["SEBAL"]
+                    GDAL_env_path = SEBAL_env_paths
+                    GDAL_TRANSLATE = os.path.join(GDAL_env_path, 'gdal_translate')
                 # run gdal translate command               
                 FullCmd = '%s -of GTiff %s %s' %(GDAL_TRANSLATE, name_in, name_out)            
-                Run_command_window(FullCmd)
+                os.system(FullCmd)
                 
                 # Open data
                 dest_PV = gdal.Open(name_out)
