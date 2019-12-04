@@ -8,6 +8,7 @@ PySEBAL_dev_v3.8
          September 2017
 
 @author Sajid Pareeth
+        December 2019
 """
 import pdb
 import platform
@@ -49,8 +50,8 @@ def SEBALcode(number,inputExcel):
     os.makedirs(output_folder)	
  			
     # Start log file
-    filename_logfile = os.path.join(output_folder, 'log.txt')	
-    sys.stdout = open(filename_logfile, 'w')		
+    # filename_logfile = os.path.join(output_folder, 'log.txt')	
+    # sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
     DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
@@ -142,7 +143,7 @@ def SEBALcode(number,inputExcel):
        
         # Open the Landsat_Input sheet				
         ws = wb['Landsat_Input']		
-      
+        
         # Extract Landsat name, number and amount of thermal bands from excel file 
         Name_Landsat_Image = str(ws['B%d' %number].value)    # From glovis.usgs.gov
         Landsat_nr = int(ws['C%d' %number].value)            # Type of Landsat (LS) image used (LS5, LS7, or LS8)
@@ -646,8 +647,8 @@ def SEBALcode(number,inputExcel):
     phi_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'phi_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     radiation_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Ra24_mountain_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     cos_zn_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'cos_zn_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    Atmos_pressure_fileName = os.path.join(output_folder, 'Output_meteo', 'atmos_pressure_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    Psychro_c_fileName = os.path.join(output_folder, 'Output_meteo', 'psychro_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #Atmos_pressure_fileName = os.path.join(output_folder, 'Output_meteo', 'atmos_pressure_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #Psychro_c_fileName = os.path.join(output_folder, 'Output_meteo', 'psychro_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     water_mask_temp_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Water_mask_temporary_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     veg_cover_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_vegt_cover_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     lai_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_lai_average_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
@@ -656,19 +657,19 @@ def SEBALcode(number,inputExcel):
     fpar_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_fpar_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     b10_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_b10_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     cloud_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    surf_temp_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    temp_surface_sharpened_fileName =  os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_sharpened_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    surf_temp_fileName = os.path.join(output_folder, 'Output_thermal', '%s_surface_temp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    temp_surface_sharpened_fileName =  os.path.join(output_folder, 'Output_thermal', '%s_surface_temp_sharpened_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     snow_mask_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_snow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     water_mask_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_water_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     shadow_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_shadow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Rn_24_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     rn_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     g_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_G_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    temp_corr_fileName = os.path.join(output_folder, 'Output_temporary', '%s_temp_corr_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    ts_dem_fileName = os.path.join(output_folder, 'Output_temporary', '%s_ts_dem_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    temp_corr_fileName = os.path.join(output_folder, 'Output_thermal', '%s_temp_corr_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    ts_dem_fileName = os.path.join(output_folder, 'Output_thermal', '%s_ts_dem_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     surf_rough_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_roughness_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    hot_pixels_fileName = os.path.join(output_folder, 'Output_temporary', '%s_hot_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    cold_pixels_fileName = os.path.join(output_folder, 'Output_temporary', '%s_cold_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    hot_pixels_fileName = os.path.join(output_folder, 'Output_thermal', '%s_hot_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    cold_pixels_fileName = os.path.join(output_folder, 'Output_thermal', '%s_cold_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     h_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_h_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     min_bulk_surf_res_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_%s_min_bulk_surf_resis_24_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     EF_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_EFinst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
@@ -2275,195 +2276,8 @@ def SEBALcode(number,inputExcel):
     save_GeoTiff_proy(lsc, Rn_24, Rn_24_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, rn_inst, rn_inst_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, g_inst, g_inst_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, Pair, Atmos_pressure_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, Psychro_c, Psychro_c_fileName, shape_lsc, nband=1)							
-
-    # ------------------------------------------------------------------------
-    # ------------------------------------------------------------------------
-    # ----   Testing calculated dT based on other classes
-
-    '''
-    # Calculate dT for 4 different NDVI classes
-    # Constants Class 1
-    NDVI_check_min = 0.9 
-    NDVI_check_max = 10
-    ts_dem_class_1_mean = np.nanmean(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_1_std = np.nanstd(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_1 = ts_dem_class_1_mean - 2 * ts_dem_class_1_std    
-								
-								
-    Rn_Class_1  = np.nanmean(rn_inst[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    G_Class_1 = np.nanmean(g_inst[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])							
-    LAI_class_1 = np.nanmean(LAI[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])						
-    vegt_cover_class_1 = np.nanmean(vegt_cover[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])					
-    z0m_class_1 = np.nanmean(Surf_roughness[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
- 
-								
-    if Wind_inst_kind_of_data == 1:        
-        u_200_class_1	= np.nanmean(u_200[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        u_200_class_1 = u_200
-
-    if Temp_inst_kind_of_data == 1:        
-        Temp_inst_class_1 = np.nanmean(Temp_inst[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        Temp_inst_class_1 = Temp_inst
-									
-    if RH_inst_kind_of_data == 1:        
-        RH_inst_class_1	= np.nanmean(RH_inst[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        RH_inst_class_1 = RH_inst
-									
-    air_dens_class_1 = np.nanmean(air_dens[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    Psychro_c_class_1 = np.nanmean(Psychro_c[np.logical_and(ts_dem<ts_dem_class_1,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    rs_min = 100								
-    rsoil_min = 80	
-        								 								
-    dT_new1, T0_DEM_new1 = Check_dT(Rn_Class_1, G_Class_1, LAI_class_1, vegt_cover_class_1, z0m_class_1, u_200_class_1, Temp_inst_class_1, RH_inst_class_1, air_dens_class_1, Psychro_c_class_1, rl, rs_min, rsoil_min) 
-
-    print 'CHECK dT for different Classes'
-    print 'Class 1 (NDVI higher then 0.9)'
-    print 'dT = %s' % dT_new1
-    print 'dT (old) = %s' %(np.nanmean(dT[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)]))
-    print 'T0_DEM = %s' % T0_DEM_new1
-								
-    # Constants Class 2
-    NDVI_check_min = 0.8 
-    NDVI_check_max = 0.9
-    ts_dem_class_2_mean = np.nanmean(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_2_std = np.nanstd(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_2 = ts_dem_class_2_mean - 2 * ts_dem_class_2_std    
-								
-    Rn_Class_2  = np.nanmean(rn_inst[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    G_Class_2 = np.nanmean(g_inst[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])							
-    LAI_class_2 = np.nanmean(LAI[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])							
-    vegt_cover_class_2 = np.nanmean(vegt_cover[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])						
-    z0m_class_2 = np.nanmean(Surf_roughness[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-    
-           
-    if Wind_inst_kind_of_data == 1:        
-        u_200_class_2	= np.nanmean(u_200[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-    else:
-        u_200_class_2 = u_200
-    if Temp_inst_kind_of_data == 1:        
-        Temp_inst_class_2 = np.nanmean(Temp_inst[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-    else:
-        Temp_inst_class_2 = Temp_inst
-									
-    if RH_inst_kind_of_data == 1:        
-        RH_inst_class_2	= np.nanmean(RH_inst[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-    else:
-        RH_inst_class_2 = RH_inst
-									
-    air_dens_class_2 = np.nanmean(air_dens[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	 
-    Psychro_c_class_2 = np.nanmean(Psychro_c[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-    rs_min = 100
-    rsoil_min = 80	
-        								 								
-    dT_new2, T0_DEM_new2 = Check_dT(Rn_Class_2, G_Class_2, LAI_class_2, vegt_cover_class_2, z0m_class_2, u_200_class_2, Temp_inst_class_2, RH_inst_class_2, air_dens_class_2, Psychro_c_class_2, rl, rs_min, rsoil_min) 
-
-    print 'CHECK dT for different Classes'
-    print 'Class 2 (NDVI between 0.8 and 0.9)'
-    print 'dT = %s' % dT_new2
-    print 'dT (old) = %s' %(np.nanmean(dT[np.logical_and(ts_dem<ts_dem_class_2,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))]))	
-    print 'T0_DEM = %s' % T0_DEM_new2								
-								
-    # Constants Class 3
-    NDVI_check_min = 0.7 
-    NDVI_check_max = 0.8
-    ts_dem_class_3_mean = np.nanmean(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_3_std = np.nanstd(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_3 = ts_dem_class_3_mean - 2 * ts_dem_class_3_std     
-								
-								
-    Rn_Class_3  = np.nanmean(rn_inst[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    G_Class_3 = np.nanmean(g_inst[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])								
-    LAI_class_3 = np.nanmean(LAI[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])						
-    vegt_cover_class_3 = np.nanmean(vegt_cover[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))]) 						
-    z0m_class_3 = np.nanmean(Surf_roughness[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])	
-
-        
-    if Wind_inst_kind_of_data == 1:        
-        u_200_class_3	= np.nanmean(u_200[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        u_200_class_3 = u_200
-
-    if Temp_inst_kind_of_data == 1:        
-        Temp_inst_class_3 = np.nanmean(Temp_inst[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        Temp_inst_class_3 = Temp_inst
-								
-    if RH_inst_kind_of_data == 1:        
-        RH_inst_class_3	= np.nanmean(RH_inst[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        RH_inst_class_3 = RH_inst
-									
-    air_dens_class_3 = np.nanmean(air_dens[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    Psychro_c_class_3 = np.nanmean(Psychro_c[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    rs_min = 100
-    rsoil_min = 80	
-        								 								
-    dT_new3, T0_DEM_new3 = Check_dT(Rn_Class_3, G_Class_3, LAI_class_3, vegt_cover_class_3, z0m_class_3, u_200_class_3, Temp_inst_class_3, RH_inst_class_3, air_dens_class_3, Psychro_c_class_3, rl, rs_min, rsoil_min) 
-
-    print 'Class 3 (NDVI between 0.7 and 0.8)'
-    print 'dT = %s' % dT_new3
-    print 'dT (old) = %s' %(np.nanmean(dT[np.logical_and(ts_dem<ts_dem_class_3,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))]))
-    print 'T0_DEM = %s' % T0_DEM_new3									
-
-    # Constants Class 4
-    NDVI_check_min = 0.6 
-    NDVI_check_max = 0.7
-    ts_dem_class_4_mean = np.nanmean(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_4_std = np.nanstd(ts_dem[np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min)])	
-    ts_dem_class_4 = ts_dem_class_4_mean - 2 * ts_dem_class_4_std     								
-					
-    Rn_Class_4  = np.nanmean(rn_inst[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    G_Class_4 = np.nanmean(g_inst[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])							
-    LAI_class_4 = np.nanmean(LAI[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])						
-    vegt_cover_class_4 = np.nanmean(vegt_cover[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])						
-    z0m_class_4 = np.nanmean(Surf_roughness[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])  	
-
-       
-    if Wind_inst_kind_of_data == 1:        
-        u_200_class_4	= np.nanmean(u_200[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        u_200_class_4 = u_200
-
-    if Temp_inst_kind_of_data == 1:        
-        Temp_inst_class_4 = np.nanmean(Temp_inst[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        Temp_inst_class_4 = Temp_inst
-									
-    if RH_inst_kind_of_data == 1:        
-        RH_inst_class_4 = np.nanmean(RH_inst[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    else:
-        RH_inst_class_4 = RH_inst
-									
-    air_dens_class_4 = np.nanmean(air_dens[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    Psychro_c_class_4 = np.nanmean(Psychro_c[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))])
-    rs_min = 100
-    rsoil_min = 80	
-        								 								
-    dT_new4, T0_DEM_new4 = Check_dT(Rn_Class_4, G_Class_4, LAI_class_4, vegt_cover_class_4, z0m_class_4, u_200_class_4, Temp_inst_class_4, RH_inst_class_4, air_dens_class_4, Psychro_c_class_4, rl, rs_min, rsoil_min) 
-        
-    print 'Class 4 (NDVI between 0.6 and 0.7)'
-    print 'dT = %s' % dT_new4
-    print 'dT (old) = %s' %(np.nanmean(dT[np.logical_and(ts_dem<ts_dem_class_4,np.logical_and(NDVI<NDVI_check_max,NDVI>NDVI_check_min))]))
-    print 'T0_DEM = %s' %T0_DEM_new4	
-     
-    dT_cold = (np.nanmean(dT[cold_pixels>0]))
-    dT_hot = (np.nanmean(dT[hot_pixels>0]))								
-    import matplotlib.pyplot as plt
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.plot(T0_DEM_new4, dT_new4, 'ro')
-    ax.plot(T0_DEM_new3, dT_new3, 'ro')
-    ax.plot(T0_DEM_new2, dT_new2, 'ro')
-    ax.plot(T0_DEM_new1, dT_new1, 'ro')								
-    ax.plot([ts_dem_cold, ts_dem_hot], [dT_cold, dT_hot], label = 'dT', color = 'k', linewidth = 2)								
-    ax.axis([270, 350, -5, 20])	
-    plt.savefig(os.path.join(output_folder,'dTvsT0_DEM.jpg'))						
-    '''
+    #save_GeoTiff_proy(lsc, Pair, Atmos_pressure_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, Psychro_c, Psychro_c_fileName, shape_lsc, nband=1)							
 
     print '---------------------------------------------------------'
     print '-------------------- Hot/Cold Pixels --------------------'
