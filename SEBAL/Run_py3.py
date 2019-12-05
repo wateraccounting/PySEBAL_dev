@@ -10,9 +10,9 @@ import pysebal_calib_py3
 ##### USER INPUTS
 
 ##### For Linux SET THE PATH TO INPUT EXCEL SHEET #####
-# inputExcel = r"/mnt/d/PySebal/PySEBAL_Pareeth/PySEBAL_dev/docs/InputEXCEL_v3_3_7_LIN.xlsx"
+# inputExcel = r"/mnt/d/PySEBAL_dev/docs/InputEXCEL_v3_3_7_LIN.xlsx"
 ##### For Windows SET THE PATH TO INPUT EXCEL SHEET #####
-inputExcel = r"D:\PySebal\PySEBAL_Pareeth\PySEBAL_dev\docs\InputEXCEL_v3_3_7_WIN.xlsx"
+inputExcel = r"D:\PySEBAL_dev\docs\InputEXCEL_v3_3_7_WIN.xlsx"
 MODE = 'RUN' # Set to CALIB initially to compute thresholds/ Set to RUN to finally compute SEBAL
 st = 2 # starting row number
 en = 2 # ending row number
