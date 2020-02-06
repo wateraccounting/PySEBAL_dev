@@ -8,9 +8,9 @@ PySEBAL_dev_v3.8
          September 2017
 
 @author Sajid Pareeth
-        December 2019
+        February 2020
 """
-import pdb
+#import pdb
 import platform
 import sys
 import os
@@ -50,8 +50,8 @@ def SEBALcode(number,inputExcel):
     os.makedirs(output_folder)	
  			
     # Start log file
-    # filename_logfile = os.path.join(output_folder, 'log.txt')	
-    # sys.stdout = open(filename_logfile, 'w')		
+    #filename_logfile = os.path.join(output_folder, 'log.txt')	
+    #sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
     DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
@@ -157,10 +157,10 @@ def SEBALcode(number,inputExcel):
         # Calibartion constants Cold Pixels from the excel file 
         Cold_Pixel_Constant = 0         # Cold Pixel Value = Mean_Cold_Pixel + Cold_Pixel_Constant * Std_Cold_Pixel (only for Landsat images)
         # NEW variables from excel sheet (Landsat_Input)
-        NDVIhot_low = float(ws['G%d' %number].value)            # Lower NDVI treshold for hot pixels
-        NDVIhot_high = float(ws['H%d' %number].value)              # Higher NDVI treshold for hot pixels
-        tcoldmin = float(ws['E%d' %number].value)
-        tcoldmax = float(ws['F%d' %number].value)
+        NDVIhot_low1 = float(ws['G%d' %number].value)            # Lower NDVI treshold for hot pixels
+        NDVIhot_high1 = float(ws['H%d' %number].value)              # Higher NDVI treshold for hot pixels
+        tcoldmin1 = float(ws['E%d' %number].value)
+        tcoldmax1 = float(ws['F%d' %number].value)
         temp_lapse = float(ws['I%d' %number].value)
         # Pixel size of the model
         pixel_spacing = int(30)
@@ -415,11 +415,9 @@ def SEBALcode(number,inputExcel):
         h_obst_name = '%s' %str(ws['O%d' %number].value) 
         h_obst_kind_of_data=1                  # Obstacle height (m) -Replace for map based on Land use?
         print 'Map to the Obstacle height = %s' %(h_obst_name)
-											
-    #NDVIhot_low = 0.03               # Lower NDVI treshold for hot pixels
-    #NDVIhot_high = 0.20              # Higher NDVI treshold for hot pixels
-    print 'Lower NDVI treshold for hot pixels = %s' %(NDVIhot_low)			
-    print 'Higher NDVI treshold for hot pixels = %s' %(NDVIhot_high)					
+
+    #print 'Lower NDVI treshold for hot pixels = %s' %(NDVIhot_low)			
+    #print 'Higher NDVI treshold for hot pixels = %s' %(NDVIhot_high)					
 			
    
     # Data for Module 12 - Soil moisture
@@ -649,69 +647,69 @@ def SEBALcode(number,inputExcel):
     cos_zn_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'cos_zn_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     #Atmos_pressure_fileName = os.path.join(output_folder, 'Output_meteo', 'atmos_pressure_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     #Psychro_c_fileName = os.path.join(output_folder, 'Output_meteo', 'psychro_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    water_mask_temp_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Water_mask_temporary_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    water_mask_temp_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Water_mask_temporary_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     veg_cover_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_vegt_cover_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     lai_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_lai_average_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    nitrogen_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_nitrogen_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    tir_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_tir_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    fpar_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_fpar_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    b10_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_b10_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    cloud_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    surf_temp_fileName = os.path.join(output_folder, 'Output_thermal', '%s_surface_temp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    temp_surface_sharpened_fileName =  os.path.join(output_folder, 'Output_thermal', '%s_surface_temp_sharpened_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    snow_mask_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_snow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    water_mask_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_water_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    shadow_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_shadow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    Rn_24_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    rn_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    g_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_G_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    temp_corr_fileName = os.path.join(output_folder, 'Output_thermal', '%s_temp_corr_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    ts_dem_fileName = os.path.join(output_folder, 'Output_thermal', '%s_ts_dem_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    surf_rough_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_roughness_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    hot_pixels_fileName = os.path.join(output_folder, 'Output_thermal', '%s_hot_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    cold_pixels_fileName = os.path.join(output_folder, 'Output_thermal', '%s_cold_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    h_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_h_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    min_bulk_surf_res_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_%s_min_bulk_surf_resis_24_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    EF_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_EFinst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    LE_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_LEinst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #nitrogen_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_nitrogen_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #tir_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_tir_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #fpar_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_fpar_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #b10_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_b10_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #cloud_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    surf_temp_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    temp_surface_sharpened_fileName =  os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_sharpened_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    snow_mask_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_snow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    water_mask_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_water_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #shadow_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_shadow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #Rn_24_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #rn_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_Rn_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #g_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_G_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    temp_corr_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_temp_corr_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    ts_dem_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_ts_dem_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #surf_rough_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_roughness_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    hot_pixels_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_hot_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    cold_pixels_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_cold_pixels_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #h_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_h_inst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #min_bulk_surf_res_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_%s_min_bulk_surf_resis_24_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #EF_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_EFinst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #LE_inst_fileName = os.path.join(output_folder, 'Output_energy_balance', '%s_LEinst_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     ETref_24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_ETref_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     ETA_24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_ETact_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     ETP_24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_ETpot_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     ET_24_deficit_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_ET_24_deficit_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    AF_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Advection_Factor_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #AF_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Advection_Factor_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     kc_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_kc_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     kc_max_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_kc_max_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    bulk_surf_res_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_bulk_surf_resis_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    total_soil_moisture_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Total_soil_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    top_soil_moisture_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Top_soil_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    RZ_SM_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Root_zone_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    SM_stress_trigger_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Moisture_stress_trigger_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    moisture_stress_biomass_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_Moisture_stress_biomass_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    irrigation_needs_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_irrigation_needs_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #bulk_surf_res_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_bulk_surf_resis_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #total_soil_moisture_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Total_soil_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #top_soil_moisture_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Top_soil_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #RZ_SM_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Root_zone_moisture_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #SM_stress_trigger_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_Moisture_stress_trigger_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #moisture_stress_biomass_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_Moisture_stress_biomass_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #irrigation_needs_fileName = os.path.join(output_folder, 'Output_soil_moisture', '%s_irrigation_needs_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Tact24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Tact_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Eact24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Eact_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Tpot24_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_Tpot_24_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     T24_deficit_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_T_24_deficit_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))   
-    LUE_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_LUE_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    #LUE_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_LUE_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Biomass_prod_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_Biomass_production_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Biomass_wp_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_Biomass_wp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     Biomass_deficit_fileName = os.path.join(output_folder, 'Output_biomass_production', '%s_Biomass_deficit_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     dst_FileName_DEM = os.path.join(output_folder, 'Output_radiation_balance', 'proyDEM_%s.tif' %res1)
-    dst_FileName_Ra_inst = os.path.join(output_folder, 'Output_radiation_balance', 'Ra_inst_%s_%s_%s_%s_%s.tif' %(res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    dst_FileName_phi = os.path.join(output_folder, 'Output_radiation_balance', 'phi_%s_%s_%s_%s_%s.tif' %(res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    dst_FileName_Ra_inst = os.path.join(output_folder, 'Output_radiation_balance', 'Ra_inst_%s_%s_%s.tif' %(res1, year, DOY))
+    dst_FileName_phi = os.path.join(output_folder, 'Output_radiation_balance', 'phi_%s_%s_%s.tif' %(res1, year, DOY))
  
     # Define name that is only needed in Image type 1 (Landsat)			
     if Image_Type is 1:	   
        ndvi_fileName2 = os.path.join(output_folder, 'Output_vegetation', '%s_NDVI_%s_%s_%s_%s_%s.tif' %(sensor3, res3, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-       QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+       #QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
        proyDEM_fileName_90 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_90.tif')
 
     # Names for PROBA-V and VIIRS option
     if Image_Type is 2:		
          
         proyVIIRS_QC_fileName = os.path.join(output_folder, 'Output_VIIRS', '%s_QC_proy_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-        proyPROBAV_Cloud_Mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-        proyVIIRS_Cloud_Mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+        #proyPROBAV_Cloud_Mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+        #proyVIIRS_Cloud_Mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
         proyDEM_fileName_375 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_375.tif')
         proyDEM_fileName_400 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_400.tif')
  
@@ -936,7 +934,7 @@ def SEBALcode(number,inputExcel):
     # 6k) Theta saturated topsoil    
     if Theta_sat_top_kind_of_data is 1:
         try:
-           Theta_sat_top_fileName = os.path.join(output_folder, 'Output_soil_moisture','Theta_sat_top_input.tif')
+           Theta_sat_top_fileName = os.path.join(output_folder, 'Output_temporary','Theta_sat_top_input.tif')
            Theta_sat_top = Reshape_Reproject_Input_data(Theta_sat_top_name, Theta_sat_top_fileName, proyDEM_fileName)
         except:
            print 'ERROR: Check the saturated top soil input path in the soil excel tab' 
@@ -944,7 +942,7 @@ def SEBALcode(number,inputExcel):
     # 6l) Theta saturated subsoil          
     if Theta_sat_sub_kind_of_data is 1:
         try:
-            Theta_sat_sub_fileName = os.path.join(output_folder, 'Output_soil_moisture','Theta_sat_sub_input.tif')
+            Theta_sat_sub_fileName = os.path.join(output_folder, 'Output_temporary','Theta_sat_sub_input.tif')
             Theta_sat_sub  =Reshape_Reproject_Input_data(Theta_sat_sub_name,Theta_sat_sub_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the saturated sub soil input path in the soil excel tab' 
@@ -952,7 +950,7 @@ def SEBALcode(number,inputExcel):
     # 6m) Theta residual topsoil        
     if Theta_res_top_kind_of_data is 1:
         try:    
-            Theta_res_top_fileName = os.path.join(output_folder, 'Output_soil_moisture','Theta_res_top_input.tif')
+            Theta_res_top_fileName = os.path.join(output_folder, 'Output_temporary','Theta_res_top_input.tif')
             Theta_res_top=Reshape_Reproject_Input_data(Theta_res_top_name,Theta_res_top_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the residual top soil input path in the soil excel tab' 
@@ -960,7 +958,7 @@ def SEBALcode(number,inputExcel):
     # 6n) Theta residual subsoil    
     if Theta_res_sub_kind_of_data is 1:
         try:
-            Theta_res_sub_fileName = os.path.join(output_folder, 'Output_soil_moisture','Theta_res_sub_input.tif')
+            Theta_res_sub_fileName = os.path.join(output_folder, 'Output_temporary','Theta_res_sub_input.tif')
             Theta_res_sub=Reshape_Reproject_Input_data(Theta_res_sub_name,Theta_res_sub_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the residual sub soil input path in the soil excel tab' 
@@ -968,7 +966,7 @@ def SEBALcode(number,inputExcel):
     # 6o) Wilting point    
     if Soil_moisture_wilting_point_kind_of_data is 1:
         try:
-            Soil_moisture_wilting_point_fileName = os.path.join(output_folder, 'Output_soil_moisture','Soil_moisture_wilting_point_input.tif')
+            Soil_moisture_wilting_point_fileName = os.path.join(output_folder, 'Output_temporary','Soil_moisture_wilting_point_input.tif')
             Soil_moisture_wilting_point=Reshape_Reproject_Input_data(Soil_moisture_wilting_point_name,Soil_moisture_wilting_point_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the wilting point input path in the soil excel tab' 
@@ -976,7 +974,7 @@ def SEBALcode(number,inputExcel):
     # 6p) Fraction field capacity        
     if Field_Capacity_kind_of_data is 1:
         try:
-            Field_Capacity_fileName = os.path.join(output_folder, 'Output_soil_moisture','Fraction_Field_Capacity_and_Saturation_input.tif')
+            Field_Capacity_fileName = os.path.join(output_folder, 'Output_temporary','Fraction_Field_Capacity_and_Saturation_input.tif')
             Field_Capacity=Reshape_Reproject_Input_data(Field_Capacity_name,Field_Capacity_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the field capacity input path in the soil excel tab' 
@@ -984,7 +982,7 @@ def SEBALcode(number,inputExcel):
     # 6q) Light Use Efficiency        
     if LUEmax_kind_of_data is 1:
         try:
-            LUEmax_fileName = os.path.join(output_folder, 'Output_soil_moisture','LUEmax_input.tif')
+            LUEmax_fileName = os.path.join(output_folder, 'Output_temporary','LUEmax_input.tif')
             LUEmax=Reshape_Reproject_Input_data(LUEmax_name,LUEmax_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the LUE input path in the soil excel tab' 
@@ -992,7 +990,7 @@ def SEBALcode(number,inputExcel):
     # 6r) Obstacle height      						
     if h_obst_kind_of_data is 1:
         try:
-            h_obst_fileName = os.path.join(output_folder, 'Output_soil_moisture','h_obst_input.tif')
+            h_obst_fileName = os.path.join(output_folder, 'Output_temporary','h_obst_input.tif')
             h_obst=Reshape_Reproject_Input_data(h_obst_name,h_obst_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the obstacle height input path in the soil excel tab' 
@@ -1000,7 +998,7 @@ def SEBALcode(number,inputExcel):
     # 6s) deplection factor      						
     if depl_factor_kind_of_data is 1:
         try:
-            depl_factor_fileName = os.path.join(output_folder, 'Output_soil_moisture','depl_factor_input.tif')
+            depl_factor_fileName = os.path.join(output_folder, 'Output_temporary','depl_factor_input.tif')
             depl_factor=Reshape_Reproject_Input_data(depl_factor_name,depl_factor_fileName,proyDEM_fileName)
         except:
             print 'ERROR: Check the depletion factor input path in the soil excel tab' 
@@ -1076,7 +1074,7 @@ def SEBALcode(number,inputExcel):
         print '  Lower right corner x, y: ', lrx, ', ', lry
          
         # Crop  the Landsat images to the DEM extent -
-        dst_FileName = os.path.join(output_folder, 'Output_temporary', '%s_cropped_LS_b2_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))  # Before 10 !!
+        dst_FileName = os.path.join(output_folder, 'Output_temporary', '%s_cropped_LS_b2_%s_%s_%s.tif' %(sensor1, res1, year, DOY))  # Before 10 !!
         dir_name = os.path.dirname(dst_FileName)  # Directory of the file
      
         # If the directory does not exist, create it.
@@ -1097,7 +1095,7 @@ def SEBALcode(number,inputExcel):
         print '  Lower right corner x, y: ', lrx, ', ', lry
        
         # output names for resampling
-        dst_LandsatMask = os.path.join(output_folder, 'Output_temporary', '%s_cropped_LANDSATMASK_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+        dst_LandsatMask = os.path.join(output_folder, 'Output_temporary', '%s_cropped_LANDSATMASK_%s_%s_%s.tif' %(sensor1, res1, year, DOY))
 
         # Open Landsat data only if all additional data is not defined.
 
@@ -1152,7 +1150,7 @@ def SEBALcode(number,inputExcel):
                  ClipLandsat=np.where(np.logical_or(ls_data_11==0, ls_data_10==0),0,1)
 
             else:
-                print 'Landsat image not supported, use Landsat 7 or 8'
+                print('Landsat image not supported, use Landsat 7 or 8')
 
             # Create Cloud mask is BQA map is available (newer version Landsat images)
             BQA_LS_Available = 0
@@ -1184,9 +1182,9 @@ def SEBALcode(number,inputExcel):
             Reflect, Spec_Rad = Landsat_Reflect(Bands, input_folder, Name_Landsat_Image, output_folder, shape_lsc, ClipLandsat, Lmax, Lmin, ESUN_L5, ESUN_L7, ESUN_L8, cos_zn, dr, Landsat_nr, proyDEM_fileName)
        
             # save spectral data 
-            for i in range(0,6):							
-                spec_ref_fileName = os.path.join(output_folder, 'Output_radiation_balance','%s_spectral_reflectance_B%s_%s_%s_%s_%s_%s.tif' %(Bands[i], sensor1, res3, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-                save_GeoTiff_proy(lsc, Reflect[:, :, i], spec_ref_fileName, shape_lsc, nband=1)
+            #for i in range(0,6):							
+                #spec_ref_fileName = os.path.join(output_folder, 'Output_radiation_balance','%s_spectral_reflectance_B%s_%s_%s_%s_%s_%s.tif' %(Bands[i], sensor1, res3, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #save_GeoTiff_proy(lsc, Reflect[:, :, i], spec_ref_fileName, shape_lsc, nband=1)
           								
             # ------------------------------------------------------------------------
             # ------------------------------------------------------------------------
@@ -1195,7 +1193,6 @@ def SEBALcode(number,inputExcel):
         print '---------------------------------------------------------'
         print '-------------------- Module 3 ---------------------------'
         print '---------------------------------------------------------'
- 						
         # Check NDVI							
         try:
             if (ws['B%d' % number].value) is not None:					
@@ -1261,12 +1258,12 @@ def SEBALcode(number,inputExcel):
 
         # Save output maps that will be used in SEBAL
         save_GeoTiff_proy(lsc, water_mask_temp, water_mask_temp_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, FPAR, fpar_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, Nitrogen, nitrogen_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, FPAR, fpar_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, Nitrogen, nitrogen_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, vegt_cover, veg_cover_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, LAI, lai_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, b10_emissivity, b10_emissivity_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, b10_emissivity, b10_emissivity_fileName, shape_lsc, nband=1)
    
         # ------------------------------------------------------------------------
         # ------------------------------------------------------------------------
@@ -1277,7 +1274,7 @@ def SEBALcode(number,inputExcel):
         print '---------------------------------------------------------'
  
         # Check if a surface temperature dataset is defined. If so use this one instead of the Landsat, otherwise Landsat
- 
+ 	#pdb.set_trace()		
         # Check Surface temperature	
         try:
             if (ws['E%d' % number].value) is not None:				
@@ -1367,7 +1364,7 @@ def SEBALcode(number,inputExcel):
         try:
             if (ws['F%d' % number].value) is not None:					
                 # Output folder QC defined by the user							
-                QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                QC_Map_fileName = os.path.join(output_folder, 'Output_temporary', 'User_quality_mask_%s_%s_%s.tif' %(res2, year, DOY))
  
                 # Reproject and reshape users NDVI  
                 QC_Map = Reshape_Reproject_Input_data(r'%s' %str(ws['F%d' % number].value),QC_Map_fileName,proyDEM_fileName)		 														 
@@ -1395,9 +1392,9 @@ def SEBALcode(number,inputExcel):
                     cloud_mask = Create_Buffer(cloud_mask)                
            
                 # Save output maps
-                save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1)
-                save_GeoTiff_proy(lsc, snow_mask, snow_mask_fileName, shape_lsc, nband=1)                  
-                save_GeoTiff_proy(lsc, shadow_mask, shadow_mask_fileName, shape_lsc, nband=1)
+                #save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1)
+                #save_GeoTiff_proy(lsc, snow_mask, snow_mask_fileName, shape_lsc, nband=1)                  
+                #save_GeoTiff_proy(lsc, shadow_mask, shadow_mask_fileName, shape_lsc, nband=1)
     
                 # Total Quality Mask
                 QC_Map = np.empty(cloud_mask.shape)
@@ -1406,11 +1403,11 @@ def SEBALcode(number,inputExcel):
                 QC_Map[Landsat_Mask>0] = 1								
 											
                 # Output folder QC defined by the user							
-                QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif.tif' %(sensor1, res2, year, DOY))
 											
                 # Save the PROBA-V NDVI as tif file												
-                save_GeoTiff_proy(lsc, QC_Map, QC_Map_fileName, shape, nband=1)
-                save_GeoTiff_proy(dest, QC_Map, QC_Map_fileName, shape, nband=1)								  
+                #save_GeoTiff_proy(lsc, QC_Map, QC_Map_fileName, shape, nband=1)
+                #save_GeoTiff_proy(dest, QC_Map, QC_Map_fileName, shape, nband=1)								  
 
         except:                
             assert "Please check the quality path"									
@@ -1545,7 +1542,7 @@ def SEBALcode(number,inputExcel):
                     Cloud_Mask_PROBAV=np.zeros((shape_lsc[1], shape_lsc[0]))
                     Cloud_Mask_PROBAV[data_PROBAV[:,:]!=n188_float]=1
                     spectral_reflectance_PROBAV[:, :, index]=Cloud_Mask_PROBAV
-                    save_GeoTiff_proy(lsc, Cloud_Mask_PROBAV, proyPROBAV_Cloud_Mask_fileName, shape_lsc, nband=1)
+                    #save_GeoTiff_proy(lsc, Cloud_Mask_PROBAV, proyPROBAV_Cloud_Mask_fileName, shape_lsc, nband=1)
  
                 # Change the spectral reflectance to meet certain limits                               
                 spectral_reflectance_PROBAV[:, :, index]=np.where(spectral_reflectance_PROBAV[:, :, index]<=0,np.nan,spectral_reflectance_PROBAV[:, :, index])   
@@ -1559,7 +1556,7 @@ def SEBALcode(number,inputExcel):
     
         else:
             Cloud_Mask_PROBAV=np.zeros((shape_lsc[1], shape_lsc[0]))
-            save_GeoTiff_proy(lsc, Cloud_Mask_PROBAV, proyPROBAV_Cloud_Mask_fileName, shape_lsc, nband=1)
+            #save_GeoTiff_proy(lsc, Cloud_Mask_PROBAV, proyPROBAV_Cloud_Mask_fileName, shape_lsc, nband=1)
  
      
         print '---------------------------------------------------------'
@@ -1668,8 +1665,8 @@ def SEBALcode(number,inputExcel):
 				
         # Save the paramaters as a geotiff
         save_GeoTiff_proy(lsc, water_mask, water_mask_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, Nitrogen_PROBAV, nitrogen_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, Nitrogen_PROBAV, nitrogen_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, vegt_cover, veg_cover_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, LAI, lai_fileName, shape_lsc, nband=1)           
 
@@ -1702,7 +1699,7 @@ def SEBALcode(number,inputExcel):
         try:	
             if (ws['E%d' % number].value) is not None:									
                # Define output folder Thermal VIIRS by the user					
-                proyVIIRS_fileName_100 = os.path.join(output_folder, 'Output_VIIRS','User_TB_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                proyVIIRS_fileName_100 = os.path.join(output_folder, 'Output_VIIRS','User_TB_%s_%s_%s.tif' %(res2, year, DOY))
   
                 # Reshape and reproject the Thermal data given by the user and resample this to a 375m resolution
                 temp_surface_sharpened = Reshape_Reproject_Input_data(r'%s' %str(ws['E%d' % number].value), proyVIIRS_fileName_100, proyDEM_fileName)		 					
@@ -1727,7 +1724,7 @@ def SEBALcode(number,inputExcel):
                 data_VIIRS = VIIRS.GetRasterBand(1).ReadAsArray()    
 				
                 # Define the thermal VIIRS output name
-                proyVIIRS_fileName = os.path.join(output_folder, 'Output_VIIRS','%s_TB_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                proyVIIRS_fileName = os.path.join(output_folder, 'Output_VIIRS','%s_TB_%s_%s_%s.tif' %(sensor2, res2, year, DOY))
 	 											
                 # Save the thermal VIIRS data 												
                 save_GeoTiff_proy(lsc, data_VIIRS, proyVIIRS_fileName, shape_lsc, nband=1)							
@@ -1768,7 +1765,7 @@ def SEBALcode(number,inputExcel):
             data_VIIRS[NDVI==0]=0
             Cloud_Mask_VIIRS=np.zeros((shape_lsc[1], shape_lsc[0]))
             Cloud_Mask_VIIRS[data_VIIRS_QC!=0]=1
-            save_GeoTiff_proy(lsc, Cloud_Mask_VIIRS, proyVIIRS_Cloud_Mask_fileName, shape_lsc, nband=1)
+            #save_GeoTiff_proy(lsc, Cloud_Mask_VIIRS, proyVIIRS_Cloud_Mask_fileName, shape_lsc, nband=1)
             
             # Create total VIIRS and PROBA-V cloud mask (100m)       
             QC_Map=np.zeros((shape_lsc[1], shape_lsc[0]))
@@ -1794,7 +1791,7 @@ def SEBALcode(number,inputExcel):
             n120_surface_temp=np.where(n120_surface_temp>450,np.nan,Temp_TOA_100)
         
             # Save the surface temperature of the VIIRS in 100m resolution
-            temp_surface_100_fileName_beforeTS = os.path.join(output_folder, 'Output_temporary','%s_%s_surface_temp_before_Thermal_Sharpening_%s_%s_%s_%s_%s.tif' %(sensor1, sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+            temp_surface_100_fileName_beforeTS = os.path.join(output_folder, 'Output_temporary','%s_%s_surface_temp_before_Thermal_Sharpening_%s_%s_%s.tif' %(sensor1, sensor2, res2, year, DOY))
             save_GeoTiff_proy(lsc, n120_surface_temp, temp_surface_100_fileName_beforeTS, shape_lsc, nband=1)     												
      
             print '---------------------------------------------------------'
@@ -1854,7 +1851,7 @@ def SEBALcode(number,inputExcel):
         try: 
             if (ws['F%d' % number].value) is not None:					
                 # Output folder QC defined by the user							
-                QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s.tif.tif' %(res2, year, DOY))
           
                 # Reproject and reshape users NDVI  
                 QC_Map = Reshape_Reproject_Input_data(r'%s' %str(ws['F%d' % number].value),QC_fileName, proyDEM_fileName)		 														 
@@ -1870,7 +1867,7 @@ def SEBALcode(number,inputExcel):
                     QC_Map = np.zeros((shape_lsc[1], shape_lsc[0]))
 					
                 # Define users QC output name																
-                QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif' %(sensor1, res2, year, DOY))
       										
                  # Save the QC map as tif file											
                 save_GeoTiff_proy(lsc, QC_Map, QC_tot_fileName, shape_lsc, nband=1)
@@ -2030,8 +2027,8 @@ def SEBALcode(number,inputExcel):
 				
         # Save the paramaters as a geotiff
         save_GeoTiff_proy(lsc, water_mask, water_mask_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
-        save_GeoTiff_proy(lsc, Nitrogen_PROBAV, nitrogen_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, tir_emis, tir_emissivity_fileName, shape_lsc, nband=1)
+        #save_GeoTiff_proy(lsc, Nitrogen_PROBAV, nitrogen_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, vegt_cover, veg_cover_fileName, shape_lsc, nband=1)
         save_GeoTiff_proy(lsc, LAI, lai_fileName, shape_lsc, nband=1)           
 
@@ -2180,7 +2177,7 @@ def SEBALcode(number,inputExcel):
         try: 
             if (ws['F%d' % number].value) is not None:					
                 # Output folder QC defined by the user							
-                QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s.tif.tif' %(res2, year, DOY))
           
                 # Reproject and reshape users NDVI  
                 QC_Map = Reshape_Reproject_Input_data(r'%s' %str(ws['F%d' % number].value),QC_fileName, proyDEM_fileName)		 														 
@@ -2192,7 +2189,7 @@ def SEBALcode(number,inputExcel):
             else:
 					
                 # Define users QC output name																
-                QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+                #QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif' %(sensor1, res2, year, DOY))
       										
                  # Save the QC map as tif file											
                 save_GeoTiff_proy(lsc, QC_Map, QC_tot_fileName, shape_lsc, nband=1)
@@ -2273,19 +2270,23 @@ def SEBALcode(number,inputExcel):
     print 'Mean instantaneous Ground Heat Flux = %0.3f (W/m2)' % np.nanmean(g_inst)
        
     # Save output maps
-    save_GeoTiff_proy(lsc, Rn_24, Rn_24_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, rn_inst, rn_inst_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, g_inst, g_inst_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, Rn_24, Rn_24_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, rn_inst, rn_inst_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, g_inst, g_inst_fileName, shape_lsc, nband=1)
     #save_GeoTiff_proy(lsc, Pair, Atmos_pressure_fileName, shape_lsc, nband=1)
     #save_GeoTiff_proy(lsc, Psychro_c, Psychro_c_fileName, shape_lsc, nband=1)							
 
     print '---------------------------------------------------------'
     print '-------------------- Hot/Cold Pixels --------------------'
     print '---------------------------------------------------------'
-       
+    #pdb.set_trace()    
     # Temperature at sea level corrected for elevation: ??
-    ts_dem,air_dens,Temp_corr=Correct_Surface_Temp(temp_surface_sharpened,Temp_lapse_rate,DEM_resh,Pair,dr,Transm_corr,cos_zn,Sun_elevation,deg2rad,QC_Map)    
-       
+    ts_dem,air_dens,Temp_corr=Correct_Surface_Temp(Temp_24,temp_surface_sharpened,Temp_lapse_rate,DEM_resh,Pair,dr,Transm_corr,cos_zn,Sun_elevation,deg2rad,QC_Map)    
+    NDVI_land = np.where(NDVI <= 0, np.nan, NDVI)
+    NDVIhot_low = np.nanpercentile(NDVI_land, NDVIhot_low1)
+    NDVIhot_high = np.nanpercentile(NDVI_land, NDVIhot_high1)
+    tcoldmin = np.nanpercentile(ts_dem, tcoldmin1)
+    tcoldmax = np.nanpercentile(ts_dem, tcoldmax1)
     # Selection of hot and cold pixels
     # Hot pixels
     ts_dem_hot,hot_pixels = Calc_Hot_Pixels(ts_dem,QC_Map, water_mask,NDVI,NDVIhot_low,NDVIhot_high,Hot_Pixel_Constant)
@@ -2318,7 +2319,7 @@ def SEBALcode(number,inputExcel):
        
     # calculate windspeed at the blending height and the friction velocity by using the Raupach model or NDVI
     Surf_roughness,u_200,ustar_1,disp_height=Calc_Wind_Speed_Friction(h_obst,Wind_inst,zx,LAI,NDVI,Surf_albedo,water_mask,surf_roughness_equation_used)
-    save_GeoTiff_proy(lsc, Surf_roughness, surf_rough_fileName, shape_lsc, nband=1) 
+    #save_GeoTiff_proy(lsc, Surf_roughness, surf_rough_fileName, shape_lsc, nband=1) 
        
     # Computation of surface roughness for momentum transport
     k_vk = 0.41      # Von Karman constant
@@ -2336,7 +2337,7 @@ def SEBALcode(number,inputExcel):
         L,psi,psi_m200,psi_m200_stable,h_inst,ustar_corr,rah_corr,dT, slope_dt, offset_dt = Iterate_Friction_Velocity(k_vk,u_200,Surf_roughness,g_inst,rn_inst, ts_dem, ts_dem_hot, ts_dem_cold,air_dens, temp_surface_sharpened,L,psi,psi_m200,psi_m200_stable,QC_Map, hot_pixels, slope)
        
     # Save files
-    save_GeoTiff_proy(lsc, h_inst, h_inst_fileName, shape_lsc, nband=1) 
+    #save_GeoTiff_proy(lsc, h_inst, h_inst_fileName, shape_lsc, nband=1) 
     
     print '---------------------------------------------------------'
     print '-------------------- Evaporation ------------------------'
@@ -2374,17 +2375,17 @@ def SEBALcode(number,inputExcel):
     kc_max = ETP_24 / ETref_24
 
     # Save files   
-    save_GeoTiff_proy(lsc, rs_min, min_bulk_surf_res_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, EF_inst, EF_inst_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, LE_inst, LE_inst_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, rs_min, min_bulk_surf_res_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, EF_inst, EF_inst_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, LE_inst, LE_inst_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, ETref_24, ETref_24_fileName, shape_lsc, nband=1)							
     save_GeoTiff_proy(lsc, ETA_24, ETA_24_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, ETP_24, ETP_24_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, ET_24_deficit, ET_24_deficit_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, AF, AF_fileName, shape_lsc, nband=1)								
+    #save_GeoTiff_proy(lsc, AF, AF_fileName, shape_lsc, nband=1)								
     save_GeoTiff_proy(lsc, kc, kc_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, kc_max, kc_max_fileName, shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, bulk_surf_resis_24, bulk_surf_res_fileName, shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, bulk_surf_resis_24, bulk_surf_res_fileName, shape_lsc, nband=1)
 
     print '---------------------------------------------------------'
     print '-------------------- Soil Moisture ----------------------'
@@ -2405,12 +2406,12 @@ def SEBALcode(number,inputExcel):
     save_GeoTiff_proy(lsc, Eact_24, Eact24_fileName,shape_lsc, nband=1)                  
     save_GeoTiff_proy(lsc, Tpot_24, Tpot24_fileName,shape_lsc, nband=1)                 
     save_GeoTiff_proy(lsc, T24_deficit, T24_deficit_fileName,shape_lsc, nband=1)                 
-    save_GeoTiff_proy(lsc, total_soil_moisture, total_soil_moisture_fileName,shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, top_zone_moisture_final, top_soil_moisture_fileName,shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, root_zone_moisture_final, RZ_SM_fileName, shape_lsc,nband=1)
-    save_GeoTiff_proy(lsc, SM_stress_trigger, SM_stress_trigger_fileName,shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, moisture_stress_biomass, moisture_stress_biomass_fileName,shape_lsc, nband=1)
-    save_GeoTiff_proy(lsc, irrigation_needs, irrigation_needs_fileName,shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, total_soil_moisture, total_soil_moisture_fileName,shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, top_zone_moisture_final, top_soil_moisture_fileName,shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, root_zone_moisture_final, RZ_SM_fileName, shape_lsc,nband=1)
+    #save_GeoTiff_proy(lsc, SM_stress_trigger, SM_stress_trigger_fileName,shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, moisture_stress_biomass, moisture_stress_biomass_fileName,shape_lsc, nband=1)
+    #save_GeoTiff_proy(lsc, irrigation_needs, irrigation_needs_fileName,shape_lsc, nband=1)
   
     print '---------------------------------------------------------'
     print '---------------------- Biomass --------------------------'
@@ -2418,12 +2419,22 @@ def SEBALcode(number,inputExcel):
  
     # calculate biomass production
     LUE,Biomass_prod,Biomass_wp,Biomass_deficit = Calc_Biomass_production(LAI,ETP_24,moisture_stress_biomass,ETA_24,Ra_mountain_24,Transm_24,FPAR,esat_24,eact_24,Th,Kt,Tl,Temp_24,LUEmax)
-    save_GeoTiff_proy(lsc, LUE, LUE_fileName,shape_lsc, nband=1)    
+    #save_GeoTiff_proy(lsc, LUE, LUE_fileName,shape_lsc, nband=1)    
     save_GeoTiff_proy(lsc, Biomass_prod, Biomass_prod_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, Biomass_wp, Biomass_wp_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, Biomass_deficit, Biomass_deficit_fileName,shape_lsc, nband=1)
     lsc=None
- 
+
+    print '---------------------------------------------------------'
+    print '------------Removing Intermediary files------------------'
+    print '---------------------------------------------------------'
+
+    try:
+        shutil.rmtree(os.path.join(output_folder, 'Output_temporary'))
+        shutil.rmtree(os.path.join(output_folder, 'Output_radiation_balance'))
+    except OSError as e:
+        print 'Error: folder does not exist'
+
     print '...................................................................'
     print '............................DONE!..................................'
     print '...................................................................'
@@ -2529,8 +2540,11 @@ def Separate_E_T(Light_use_extinction_factor,LAI,ETP_24,Theta_res_top,Theta_res_
    # constants
       
    Tpot_24_estimate=(1-np.exp(-Light_use_extinction_factor*LAI))*ETP_24
+
    SE_top = (top_soil_moisture-Theta_res_top)/(Theta_sat_top-Theta_res_top)
+
    Eact_24_estimate=np.minimum(1,1 / np.power(SE_top + 0.1,-2.0))*(ETP_24-Tpot_24_estimate)
+   
    #RS_soil = RS_soil_min * np.power(SE_top,-2.0)
    #Eact_24_estimate=(sl_es_24+Psychro_c*(1+RS_soil_min/Rah_PM))/(sl_es_24+Psychro_c*(1+RS_soil/Rah_PM))*(ETP_24-Tpot_24_estimate)
    n66_memory = moisture_stress_biomass_first * Tpot_24_estimate
@@ -2707,7 +2721,8 @@ def Calc_Ref_Pot_ET(LAI,Surface_temp,sl_es_24,Rn_ref,air_dens,esat_24,eact_24,ra
     LAI_eff = LAI / (0.3 * LAI + 1.2)
     rs_min = rl / LAI_eff  # Min (Bulk) surface resistance (s/m)
     # Latent heat of vaporization (J/kg):
-    Lhv = (2.501 - 2.361e-3 * (Surface_temp - 273.15)) * 1E6
+    # Lhv = (2.501 - 2.361e-3 * (Surface_temp - 273.15)) * 1E6
+    Lhv = 2.45 * 1E6
 
     # Reference evapotranspiration- grass
     # Penman-Monteith of the combination equation (eq 3 FAO 56) (J/s/m2)
@@ -2828,7 +2843,7 @@ def NDVI_Model(NDVI,Surf_albedo,water_mask):
     return(zom_NDVI)   
        
 #------------------------------------------------------------------------------
-def Correct_Surface_Temp(Surface_temp,Temp_lapse_rate,DEM_resh,Pair,dr,Transm_corr,cos_zn,Sun_elevation,deg2rad,ClipLandsat):
+def Correct_Surface_Temp(Temp_24,Surface_temp,Temp_lapse_rate,DEM_resh,Pair,dr,Transm_corr,cos_zn,Sun_elevation,deg2rad,ClipLandsat):
     """
     Function to correct the surface temperature based on the DEM map
     """     
@@ -2838,7 +2853,8 @@ def Correct_Surface_Temp(Surface_temp,Temp_lapse_rate,DEM_resh,Pair,dr,Transm_co
     cos_zenith_flat = np.cos((90 - Sun_elevation) * deg2rad)
     Temp_corr = Surface_temp + Temp_lapse_rate * DEM_resh  # rescale everything to sea level
     Temp_corr[Surface_temp == 350.0] = 0.0
-    air_dens = 1000 * Pair / (1.01 * Surface_temp * 287)
+    #air_dens = 1000 * Pair / (1.01 * Surface_temp * 287)    
+    air_dens = 1000 * Pair / (1.01 * (Temp_24 + 273.15) * 287)
     #
     ts_dem = (Temp_corr + (Gsc * dr * Transm_corr * cos_zn -
               Gsc * dr * Transm_corr * cos_zenith_flat) / (air_dens * 1004 * 0.050))
@@ -2897,7 +2913,8 @@ def Calc_Cold_Pixels(ts_dem,tcoldmin,tcoldmax,water_mask,QC_Map,ts_dem_cold_veg,
     if np.isnan(ts_dem_cold_mean) == True:
         ts_dem_cold = ts_dem_cold_veg 							
     else:
-        ts_dem_cold = ts_dem_cold_mean + Cold_Pixel_Constant * ts_dem_cold_std
+        ts_dem_cold = ts_dem_cold_mean
+	# ts_dem_cold = ts_dem_cold_mean + Cold_Pixel_Constant * ts_dem_cold_std
 
     if ts_dem_cold > ts_dem_cold_veg:
         ts_dem_cold = ts_dem_cold_veg 
@@ -2912,7 +2929,7 @@ def Calc_Cold_Pixels_Veg(NDVI,NDVI_max,NDVI_std,QC_Map,ts_dem,Image_Type, Cold_P
     Function to calculates the the cold pixels based on vegetation
     """   
     cold_pixels_vegetation = np.copy(ts_dem)
-    cold_pixels_vegetation[np.logical_and(NDVI <= (NDVI_max-0.1*NDVI_std),QC_Map != 0.0)] = 0.0
+    cold_pixels_vegetation[np.logical_and(NDVI <= (NDVI_max-0.01*NDVI_std),QC_Map != 0.0)] = 0.0 #(ORI = 0.1*NDVI_std)
     cold_pixels_vegetation[cold_pixels_vegetation==0.0] = np.nan
     ts_dem_cold_std_veg = np.nanstd(cold_pixels_vegetation)
     ts_dem_cold_min_veg = np.nanmin(cold_pixels_vegetation)
@@ -2964,7 +2981,7 @@ def Calc_Meteo(Rs_24,eact_24,Temp_24,Surf_albedo,cos_zn,dr,tir_emis,Surface_temp
     return(Rn_24,rn_inst,g_inst,Rnl_24_FAO)
     
 #------------------------------------------------------------------------------    
-def Calc_surface_temp(Temp_inst,Landsat_nr,Lmax,Lmin,therm_data,b10_emissivity,k1_c,k2_c,eact,shape_lsc,water_mask_temp,Bands_thermal,Rp,tau_sky,surf_temp_offset,Image_Type):    
+def Calc_surface_temp(Temp_inst,Landsat_nr,Lmax,Lmin,therm_data,b10_emissivity,k1_c,k2_c,eact_inst,shape_lsc,water_mask_temp,Bands_thermal,Rp,tau_sky,surf_temp_offset,Image_Type):    
     """
     Calculates the surface temperature and create a water mask
     """ 
@@ -2991,7 +3008,7 @@ def Calc_surface_temp(Temp_inst,Landsat_nr,Lmax,Lmin,therm_data,b10_emissivity,k
             # Combined:
             Temp_TOA = (Temp_TOA_10 + 1.378 * (Temp_TOA_10 - Temp_TOA_11) +
                            0.183 * np.power(Temp_TOA_10 - Temp_TOA_11, 2) - 0.268 +
-                           (54.30 - 2.238 * eact) * (1 - b10_emissivity))
+                           (54.30 - 2.238 * eact_inst) * (1 - b10_emissivity))
        
     elif Landsat_nr == 7:
         k1=666.09
