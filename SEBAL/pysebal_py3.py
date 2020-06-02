@@ -50,8 +50,8 @@ def SEBALcode(number,inputExcel):
     os.makedirs(output_folder)	
  			
     # Start log file
-    #filename_logfile = os.path.join(output_folder, 'log.txt')	
-    #sys.stdout = open(filename_logfile, 'w')		
+    filename_logfile = os.path.join(output_folder, 'log.txt')	
+    sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
     DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
@@ -2490,8 +2490,7 @@ def Calc_Biomass_production(LAI,ETP_24,moisture_stress_biomass,ETA_24,Ra_mountai
     vapor_stress = 0.88 - 0.183 * np.log(esat_24 - eact_24)
     vapor_stress_biomass = vapor_stress.clip(0.0, 1.0)
     Jarvis_coeff = (Th - Kt) / (Kt - Tl)
-    heat_stress_biomass = ((Temp_24 - Tl) * np.power(Th - Temp_24, Jarvis_coeff) /
-                           ((Kt - Tl) * np.power(Th - Kt, Jarvis_coeff)))
+    heat_stress_biomass = ((Temp_24 - Tl) * np.power(Th - Temp_24, Jarvis_coeff) / ((Kt - Tl) * np.power(Th - Kt, Jarvis_coeff)))
     print('vapor stress biomass =', '%0.3f' % np.nanmean(vapor_stress_biomass))
     print('heat stress biomass =', '%0.3f' % np.nanmean(heat_stress_biomass))
 				
@@ -2969,6 +2968,7 @@ def Calc_Meteo(Rs_24,eact_24,Temp_24,Surf_albedo,cos_zn,dr,tir_emis,Surface_temp
     Rn_24_FAO = Rns_24 - Rnl_24_FAO          # FAO equation
     Rn_24_Slob = Rns_24 - Rnl_24_Slob       # Slob equation
     Rn_24 = (Rn_24_FAO + Rn_24_Slob) / 2  # Average
+   
 
     # Instantaneous outgoing longwave radiation:
     lw_out_inst = tir_emis * SB_const * np.power(Surface_temp, 4)

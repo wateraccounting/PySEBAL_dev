@@ -50,8 +50,8 @@ def SEBALcode(number,inputExcel):
     os.makedirs(output_folder)	
  			
     # Start log file
-    #filename_logfile = os.path.join(output_folder, 'log.txt')	
-    #sys.stdout = open(filename_logfile, 'w')		
+    filename_logfile = os.path.join(output_folder, 'log.txt')	
+    sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
     DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
