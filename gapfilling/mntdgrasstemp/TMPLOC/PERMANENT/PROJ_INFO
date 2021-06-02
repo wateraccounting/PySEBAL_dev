@@ -1,0 +1,6 @@
+name: WGS 84 / UTM zone 48N
+datum: wgs84
+ellps: wgs84
+proj: utm
+zone: 48
+no_defs: defined
