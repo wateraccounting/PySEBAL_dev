@@ -40,17 +40,17 @@ from calendar import monthrange
 ## r.hants -l -h -i input=$maps suffix=_hants range=0,inf nf=3 fet=0.5 --o 
 
 ## USER INPUTS ##
-W=558402.341 #(minX)
-S=5454012.580 #(minY)
-E=582897.568 #(maxX)
-N=5468076.693 # (maxY)
+W=589983.538 #(minX)
+S=3589887.628 #(minY)
+E=651032.226 #(maxX)
+N=3608130.224# (maxY)
 res=30 # Spatial resolution of the input maps
-INDAT="G:\\PySebal\\PySEBAL_Pareeth\\gapfilling\\data\\daily" # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder - THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
-OUTDAT="G:\\PySebal\\PySEBAL_Pareeth\\gapfilling\\data\\daily\\out" # Empty output folder where the gap-filled files will be stored
-CRS='EPSG:32648' # CRS of the input maps. Output maps will be in the same CRS
+INDAT="G:\IHE_Projects\Iran_Roodasht\SEBAL_ETa\input" # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder - THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
+OUTDAT="G:\IHE_Projects\Iran_Roodasht\SEBAL_ETa\output" # Empty output folder where the gap-filled files will be stored
+CRS='EPSG:32639' # CRS of the input maps. Output maps will be in the same CRS
 gisdb='D:\\grasstemp' # A temporary folder (Empty) to process the files.
-ST='2019_01' # START year and month
-EN='2019_12' # End year and month
+ST='2014_01' # START year and month
+EN='2019_04' # End year and month
 VAR="ETa" # The variable to post process. "ETa" for Actual EvapoTranspiration, "BIO" for Biomass Production, "ST" for surface temperature; "NDVI" for ndvi maps
 ##USER INPUTS FINISH HERE ###
 

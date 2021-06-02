@@ -19,7 +19,7 @@ import shutil
 import numpy as np
 import datetime
 from osgeo import osr  
-import gdal  
+from osgeo import gdal  
 from math import sin, cos, pi, tan
 import time
 import subprocess
@@ -290,7 +290,7 @@ def SEBALcode(number,inputExcel):
                                                          # 2=Rs_24 will be determined Transm_24 must be given
     print('Method for daily radiation (1=Rs_24, 2=Transm_24) = %s' %(Method_Radiation_24)) 
 
-    # if method radiation is 1
+    # if method radiation == 1
     # ---------------------------- daily Surface Solar Radiation ------------
     # Open meteo data, first try to open as value, otherwise as string (path)
     if Method_Radiation_24 == 1:
@@ -309,7 +309,7 @@ def SEBALcode(number,inputExcel):
             Rs_24_kind_of_data = 1
             print('Map to the Daily Surface Solar Radiation = %s' %(Rs_24_name))
  
-    # if method radiation is 2
+    # if method radiation == 2
     # ---------------------------- daily transmissivity ------------
     # Open meteo data, first try to open as value, otherwise as string (path)
     if Method_Radiation_24 == 2:   
@@ -332,7 +332,7 @@ def SEBALcode(number,inputExcel):
     Method_Radiation_inst = int(ws['L%d' %number].value)    # 1=Transm_inst will be calculated Rs_inst must be given
     print('Method for instantaneous radiation (1=Rs_inst, 2=Transm_inst) = %s' %(Method_Radiation_inst))                                                           # 2=Rs_24 will be determined Transm_24 must be given
    
-    # if method instantaneous radiation is 1
+    # if method instantaneous radiation == 1
     # ---------------------------- Instantaneous Surface Solar Radiation ------------
     # Open meteo data, first try to open as value, otherwise as string (path)		
     if Method_Radiation_inst == 1:   
@@ -351,7 +351,7 @@ def SEBALcode(number,inputExcel):
             Rs_in_inst_kind_of_data = 1
             print('Map to the Instantaneous Surface Solar Radiation = %s' %(Rs_in_inst_name))
 
-    # if method instantaneous radiation is 2
+    # if method instantaneous radiation == 2
     # ---------------------------- Instantaneous transmissivity------------
     # Open meteo data, first try to open as value, otherwise as string (path)		 
     if Method_Radiation_inst == 2:       
@@ -584,7 +584,7 @@ def SEBALcode(number,inputExcel):
     # ------------------------------------------------------------------------
     # ---   Extract general info from Landsat or VIIRS metadata: DOY, hour, minutes
    
-    if Image_Type is 1:
+    if Image_Type == 1:
 				
         # the path to the MTL file of landsat				
         Landsat_meta_fileName = os.path.join(input_folder, '%s_MTL.txt' % Name_Landsat_Image)
@@ -600,7 +600,7 @@ def SEBALcode(number,inputExcel):
         res2 = '%sm' %int(pixel_spacing)
         res3 = '30m'
 
-    if Image_Type is 2:
+    if Image_Type == 2:
 							
 	    #Get time from the VIIRS dataset name (IMPORTANT TO KEEP THE TEMPLATE OF THE VIIRS NAME CORRECT example: VIIRS_SVIO5_npp_d20160601_t1103128_e1108532_b23808_c20160601170854581426_noaa_ops.tif npp_viirs_i05_20150701_124752_wgs84_fit.tif)
         Total_Day_VIIRS = Name_VIIRS_Image_TB.split('_')[3]
@@ -622,7 +622,7 @@ def SEBALcode(number,inputExcel):
         res2 = '%sm' %int(pixel_spacing)
         res3 = '30m'
 
-    if Image_Type is 3:
+    if Image_Type == 3:
 
 	     #Get time from the MODIS dataset name (IMPORTANT TO KEEP THE TEMPLATE OF THE MODIS NAME CORRECT example: MOD13Q1.A2008129.h18v05.006.2015175090913.hdf)
         Total_Day_MODIS = Name_MODIS_Image_LST.split('.')[-4][1:]
@@ -701,13 +701,13 @@ def SEBALcode(number,inputExcel):
     dst_FileName_phi = os.path.join(output_folder, 'Output_radiation_balance', 'phi_%s_%s_%s.tif' %(res1, year, DOY))
  
     # Define name that is only needed in Image type 1 (Landsat)			
-    if Image_Type is 1:	   
+    if Image_Type == 1:	   
        ndvi_fileName2 = os.path.join(output_folder, 'Output_vegetation', '%s_NDVI_%s_%s_%s_%s_%s.tif' %(sensor3, res3, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
        #QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
        proyDEM_fileName_90 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_90.tif')
 
     # Names for PROBA-V and VIIRS option
-    if Image_Type is 2:		
+    if Image_Type == 2:		
          
         proyVIIRS_QC_fileName = os.path.join(output_folder, 'Output_VIIRS', '%s_QC_proy_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
         #proyPROBAV_Cloud_Mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
@@ -716,7 +716,7 @@ def SEBALcode(number,inputExcel):
         proyDEM_fileName_400 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_400.tif')
  
    # Names for PROBA-V and VIIRS option
-    if Image_Type is 3:		
+    if Image_Type == 3:		
         proyMODIS_QC_fileName = os.path.join(output_folder, 'Output_MODIS', '%s_QC_proy_%s_%s_%s_%s_%s.tif' %(sensor2, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
         proyDEM_fileName_1000 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_1000.tif')
 
@@ -849,7 +849,7 @@ def SEBALcode(number,inputExcel):
     # 6) Reshape meteo data if needed (when path instead of number is input)
       
     # 6a) Instantaneous Temperature
-    if Temp_inst_kind_of_data is 1:
+    if Temp_inst_kind_of_data == 1:
         try:
             Temp_inst_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Temp_inst_input.tif')
             Temp_inst = Reshape_Reproject_Input_data(Temp_inst_name, Temp_inst_fileName, proyDEM_fileName)
@@ -857,7 +857,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the instantenious Temperature input path in the meteo excel tab') 
                 
     # 6b) Daily Temperature         
-    if Temp_24_kind_of_data is 1:
+    if Temp_24_kind_of_data == 1:
         try:
             Temp_24_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Temp_24_input.tif')
             Temp_24 = Reshape_Reproject_Input_data(Temp_24_name, Temp_24_fileName, proyDEM_fileName)
@@ -865,7 +865,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the daily Temperature input path in the meteo excel tab') 
                 
     # 6c) Daily Relative Humidity       
-    if RH_24_kind_of_data is 1:
+    if RH_24_kind_of_data == 1:
         try:
             RH_24_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'RH_24_input.tif')
             RH_24 = Reshape_Reproject_Input_data(RH_24_name, RH_24_fileName, proyDEM_fileName)
@@ -873,7 +873,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the instantenious Relative Humidity input path in the meteo excel tab') 
 
      # 6d) Instantaneous Relative Humidity      
-    if RH_inst_kind_of_data is 1:
+    if RH_inst_kind_of_data == 1:
         try:
             RH_inst_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'RH_inst_input.tif')
             RH_inst = Reshape_Reproject_Input_data(RH_inst_name, RH_inst_fileName, proyDEM_fileName)  
@@ -881,7 +881,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the daily Relative Humidity input path in the meteo excel tab') 
  
      # 6e) Daily wind speed      
-    if Wind_24_kind_of_data is 1:
+    if Wind_24_kind_of_data == 1:
         try:
             Wind_24_fileName = os.path.join(output_folder, 'Output_radiation_balance','Wind_24_input.tif')
             Wind_24 = Reshape_Reproject_Input_data(Wind_24_name, Wind_24_fileName, proyDEM_fileName)
@@ -890,7 +890,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the daily wind input path in the meteo excel tab') 
   
      # 6f) Instantaneous wind speed              
-    if Wind_inst_kind_of_data is 1:
+    if Wind_inst_kind_of_data == 1:
         try:
             Wind_inst_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Wind_inst_input.tif')
             Wind_inst = Reshape_Reproject_Input_data(Wind_inst_name, Wind_inst_fileName, proyDEM_fileName)  
@@ -900,7 +900,7 @@ def SEBALcode(number,inputExcel):
 
     # 6g) Daily incoming Radiation      
     if Method_Radiation_24 == 1:    
-        if Rs_24_kind_of_data is 1:
+        if Rs_24_kind_of_data == 1:
             try:
                 Net_radiation_daily_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Ra_24_input.tif')
                 Rs_24 = Reshape_Reproject_Input_data(Rs_24_name, Net_radiation_daily_fileName, proyDEM_fileName)
@@ -909,7 +909,7 @@ def SEBALcode(number,inputExcel):
  
     # 6h) Instantaneous incoming Radiation    
     if Method_Radiation_inst == 1:            
-        if Rs_in_inst_kind_of_data is 1:
+        if Rs_in_inst_kind_of_data == 1:
             try:
                 Net_radiation_inst_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Ra_in_inst_input.tif')
                 Rs_in_inst = Reshape_Reproject_Input_data(Rs_in_inst_name, Net_radiation_inst_fileName, proyDEM_fileName)
@@ -918,7 +918,7 @@ def SEBALcode(number,inputExcel):
  
     # 6i) Daily Transmissivity
     if Method_Radiation_24 == 2:      
-        if Transm_24_kind_of_data is 1:
+        if Transm_24_kind_of_data == 1:
             try:
                 Transm_24_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Transm_24_input.tif')
                 Transm_24 = Reshape_Reproject_Input_data(Transm_24_name, Transm_24_fileName, proyDEM_fileName)
@@ -927,7 +927,7 @@ def SEBALcode(number,inputExcel):
 
     # 6j) Instantaneous Transmissivity
     if Method_Radiation_inst == 2:     
-        if Transm_inst_kind_of_data is 1:
+        if Transm_inst_kind_of_data == 1:
             try:
                 Transm_inst_fileName = os.path.join(output_folder, 'Output_radiation_balance', 'Transm_inst_input.tif')
                 Transm_inst = Reshape_Reproject_Input_data(Transm_inst_name, Transm_inst_fileName, proyDEM_fileName)
@@ -935,7 +935,7 @@ def SEBALcode(number,inputExcel):
                 print('ERROR: Check the instantenious transmissivity input path in the meteo excel tab') 
  
     # 6k) Theta saturated topsoil    
-    if Theta_sat_top_kind_of_data is 1:
+    if Theta_sat_top_kind_of_data == 1:
         try:
            Theta_sat_top_fileName = os.path.join(output_folder, 'Output_temporary','Theta_sat_top_input.tif')
            Theta_sat_top = Reshape_Reproject_Input_data(Theta_sat_top_name, Theta_sat_top_fileName, proyDEM_fileName)
@@ -943,7 +943,7 @@ def SEBALcode(number,inputExcel):
            print('ERROR: Check the saturated top soil input path in the soil excel tab') 
 
     # 6l) Theta saturated subsoil          
-    if Theta_sat_sub_kind_of_data is 1:
+    if Theta_sat_sub_kind_of_data == 1:
         try:
             Theta_sat_sub_fileName = os.path.join(output_folder, 'Output_temporary','Theta_sat_sub_input.tif')
             Theta_sat_sub  =Reshape_Reproject_Input_data(Theta_sat_sub_name,Theta_sat_sub_fileName,proyDEM_fileName)
@@ -951,7 +951,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the saturated sub soil input path in the soil excel tab') 
                
     # 6m) Theta residual topsoil        
-    if Theta_res_top_kind_of_data is 1:
+    if Theta_res_top_kind_of_data == 1:
         try:    
             Theta_res_top_fileName = os.path.join(output_folder, 'Output_temporary','Theta_res_top_input.tif')
             Theta_res_top=Reshape_Reproject_Input_data(Theta_res_top_name,Theta_res_top_fileName,proyDEM_fileName)
@@ -959,7 +959,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the residual top soil input path in the soil excel tab') 
 
     # 6n) Theta residual subsoil    
-    if Theta_res_sub_kind_of_data is 1:
+    if Theta_res_sub_kind_of_data == 1:
         try:
             Theta_res_sub_fileName = os.path.join(output_folder, 'Output_temporary','Theta_res_sub_input.tif')
             Theta_res_sub=Reshape_Reproject_Input_data(Theta_res_sub_name,Theta_res_sub_fileName,proyDEM_fileName)
@@ -967,7 +967,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the residual sub soil input path in the soil excel tab') 
                 
     # 6o) Wilting point    
-    if Soil_moisture_wilting_point_kind_of_data is 1:
+    if Soil_moisture_wilting_point_kind_of_data == 1:
         try:
             Soil_moisture_wilting_point_fileName = os.path.join(output_folder, 'Output_temporary','Soil_moisture_wilting_point_input.tif')
             Soil_moisture_wilting_point=Reshape_Reproject_Input_data(Soil_moisture_wilting_point_name,Soil_moisture_wilting_point_fileName,proyDEM_fileName)
@@ -975,7 +975,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the wilting point input path in the soil excel tab') 
 
     # 6p) Fraction field capacity        
-    if Field_Capacity_kind_of_data is 1:
+    if Field_Capacity_kind_of_data == 1:
         try:
             Field_Capacity_fileName = os.path.join(output_folder, 'Output_temporary','Fraction_Field_Capacity_and_Saturation_input.tif')
             Field_Capacity=Reshape_Reproject_Input_data(Field_Capacity_name,Field_Capacity_fileName,proyDEM_fileName)
@@ -983,7 +983,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the field capacity input path in the soil excel tab') 
 
     # 6q) Light Use Efficiency        
-    if LUEmax_kind_of_data is 1:
+    if LUEmax_kind_of_data == 1:
         try:
             LUEmax_fileName = os.path.join(output_folder, 'Output_temporary','LUEmax_input.tif')
             LUEmax=Reshape_Reproject_Input_data(LUEmax_name,LUEmax_fileName,proyDEM_fileName)
@@ -991,7 +991,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the LUE input path in the soil excel tab') 
 
     # 6r) Obstacle height      						
-    if h_obst_kind_of_data is 1:
+    if h_obst_kind_of_data == 1:
         try:
             h_obst_fileName = os.path.join(output_folder, 'Output_temporary','h_obst_input.tif')
             h_obst=Reshape_Reproject_Input_data(h_obst_name,h_obst_fileName,proyDEM_fileName)
@@ -999,7 +999,7 @@ def SEBALcode(number,inputExcel):
             print('ERROR: Check the obstacle height input path in the soil excel tab') 
  
     # 6s) deplection factor      						
-    if depl_factor_kind_of_data is 1:
+    if depl_factor_kind_of_data == 1:
         try:
             depl_factor_fileName = os.path.join(output_folder, 'Output_temporary','depl_factor_input.tif')
             depl_factor=Reshape_Reproject_Input_data(depl_factor_name,depl_factor_fileName,proyDEM_fileName)
@@ -1303,7 +1303,7 @@ def SEBALcode(number,inputExcel):
             assert "Please check the surface temperature input path"																
 
         # Perform Thermal sharpening for the thermal LANDSAT image
-        if Thermal_Sharpening_not_needed is 0:
+        if Thermal_Sharpening_not_needed == 0:
 
 		    # Upscale DEM to 90m
             pixel_spacing_upscale=90
@@ -1346,7 +1346,7 @@ def SEBALcode(number,inputExcel):
         # Save the water mask
         save_GeoTiff_proy(lsc, water_mask, water_mask_fileName, shape_lsc, nband=1)
 		
-        if Thermal_Sharpening_not_needed is 1:
+        if Thermal_Sharpening_not_needed == 1:
             temp_surface_sharpened[water_mask == 1] = Surface_temp[water_mask == 1]
             
 		   # save landsat surface temperature
@@ -1535,7 +1535,7 @@ def SEBALcode(number,inputExcel):
                 g=None
                                    
                 # If the band data is not SM change the DN values into PROBA-V values and write into the spectral_reflectance_PROBAV                      
-                if bandnmr is not 'SM':  
+                if bandnmr != 'SM':  
                     data_PROBAV[:, :]=data_PROBAV_DN//2000                           
                     spectral_reflectance_PROBAV[:, :, index]=data_PROBAV[:, :]
                
@@ -2314,10 +2314,10 @@ def SEBALcode(number,inputExcel):
     print('---------------------------------------------------------')
        
     # Change the minimum windspeed to prevent high values in further calculations             
-    if Wind_inst_kind_of_data is 0:
+    if Wind_inst_kind_of_data == 0:
         if Wind_inst<1.5:
             Wind_inst=1.5
-    if Wind_24_kind_of_data is 0:
+    if Wind_24_kind_of_data == 0:
         if Wind_24<1.5:
             Wind_24=1.5       
        
