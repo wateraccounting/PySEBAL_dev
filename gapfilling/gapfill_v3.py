@@ -15,6 +15,7 @@ import sys
 print(sys.path)
 import shutil
 import glob
+import uuid
 import grass_session
 from grass_session import Session
 import grass.script as grass
@@ -30,23 +31,24 @@ S=5454012.580 #(minY)
 E=582897.568 #(maxX)
 N=5468076.693 # (maxY)
 res=30 # Spatial resolution of the input maps
-#INDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily")
-INDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily") # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder - THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
-#OUTDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily/out")
-OUTDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily\\out1") # Empty output folder where the gap-filled files will be stored
+#INDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily") # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder - THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
+INDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily")
+#OUTDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily\\out1") # Empty output folder where the gap-filled files will be stored
 CRS='EPSG:32648' # CRS of the input maps. Output maps will be in the same CRS
-#gisdb='/mnt/d/grasstemp'
-gisdb='D:\\grasstemp' # A temporary folder (Empty) to process the files.
+OUTDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily/out1")
+#gisdb='D:\\grasstemp' # A temporary folder (Empty) to process the files.
+gisdb='/mnt/d/grasstemp'
 ST='2019_01' # START year and month
 EN='2019_12' # End year and month
 VAR="ETa" # The variable to post process. "ETa" for Actual EvapoTranspiration, "BIO" for Biomass Production, "ST" for surface temperature; "NDVI" for ndvi maps
 ##USER INPUTS FINISH HERE ###
 
+jobid=str(uuid.uuid4())
 START=datetime.datetime.strptime(ST, "%Y_%m")
 END=datetime.datetime.strptime(EN, "%Y_%m")
 months = [i.strftime("%Y_%m") for i in pd.date_range(start=START, end=END, freq='MS')]
 #print(months)
-locpth=os.path.join(gisdb, 'TMPLOC')
+locpth=os.path.join(gisdb, jobid)
 #locpth=gisdb / "TMPLOC"
 if os.path.exists(locpth) and os.path.isdir(locpth):
     shutil.rmtree(locpth)
@@ -59,7 +61,7 @@ os.environ.update(dict(GRASS_COMPRESS_NULLS='1',
 # create a PERMANENT mapset
 # create a Session instance
 PERMANENT = Session()
-PERMANENT.open(gisdb=gisdb, location='TMPLOC',
+PERMANENT.open(gisdb=gisdb, location=jobid,
                create_opts=CRS)
 
 # execute some command inside PERMANENT
@@ -70,7 +72,7 @@ PERMANENT.close()
 
 # create a new mapset in the same location
 user = Session()
-user.open(gisdb=gisdb, location='TMPLOC', mapset='TMPMAP',
+user.open(gisdb=gisdb, location=jobid, mapset='TMPMAP',
                create_opts='')
 
 # using grass.script
@@ -157,3 +159,6 @@ for item in files_text:
         os.remove(os.path.join(OUTDAT, item))
 
 user.close()
+
+if os.path.exists(locpth) and os.path.isdir(locpth):
+    shutil.rmtree(locpth)
