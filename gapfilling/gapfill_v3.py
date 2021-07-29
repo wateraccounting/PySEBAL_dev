@@ -26,21 +26,32 @@ import pandas as pd
 from calendar import monthrange
 
 ## USER INPUTS ##
-W=558402.341 #(minX)
-S=5454012.580 #(minY)
-E=582897.568 #(maxX)
-N=5468076.693 # (maxY)
-res=30 # Spatial resolution of the input maps
-#INDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily") # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder - THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
-INDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily")
-#OUTDAT=Path("G:\\Development\\PySebal\\gapfilling\\data\\daily\\out1") # Empty output folder where the gap-filled files will be stored
-CRS='EPSG:32648' # CRS of the input maps. Output maps will be in the same CRS
-OUTDAT=Path("/mnt/g/Development/PySebal/gapfilling/data/daily/out1")
-#gisdb='D:\\grasstemp' # A temporary folder (Empty) to process the files.
-gisdb='/mnt/d/grasstemp'
-ST='2019_01' # START year and month
-EN='2019_12' # End year and month
-VAR="ETa" # The variable to post process. "ETa" for Actual EvapoTranspiration, "BIO" for Biomass Production, "ST" for surface temperature; "NDVI" for ndvi maps
+#(minX)
+W=544229.92 
+#(minY)
+S=4069961.44
+#(maxX)
+E=638489.92 
+#(maxY)
+N=4125311.44
+# Spatial resolution of the input maps
+res=30 
+
+# Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder
+# THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
+INDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa_Input")
+# Empty output folder where the gap-filled files will be stored
+OUTDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa_Output") 
+# CRS of the input maps. Output maps will be in the same CRS
+CRS='EPSG:32638' 
+# A temporary folder (Empty) to process the files.
+gisdb='D:\\grasstemp' 
+# START year and month
+ST='2018_10'
+# End year and month
+EN='2019_09'
+# The variable to post process. "ETa" for Actual EvapoTranspiration, "BIO" for Biomass Production, "ST" for surface temperature; "NDVI" for ndvi maps 
+VAR="ETa" 
 ##USER INPUTS FINISH HERE ###
 
 jobid=str(uuid.uuid4())
@@ -76,8 +87,8 @@ user.open(gisdb=gisdb, location=jobid, mapset='TMPMAP',
                create_opts='')
 
 # using grass.script
-ext=grass.run_command("g.extension", extension='r.series.lwr', flags=["a"])
-#grass.run_command("g.extension", extension='r.hants')
+print('Installing a required package to run LWR')
+grass.run_command("g.extension", extension='r.series.lwr')
 #grass.run_command("g.mapsets",flags="l")
 grass.run_command("g.region", n=N, s=S, e=E, w=W, res=res, flags=["a"])
 #grass.run_command("g.list", flags="f", type="rast")
@@ -85,6 +96,7 @@ s1="*.tif"
 pt1=os.path.join(INDAT, s1)
 #pt1=INDAT / s1
 list=glob.glob(pt1)
+print('Importing the input tif files into a GRASS database')
 for dt in list:
     out1=os.path.basename(dt)
     #out1=dt.rsplit('\\',1)[1]
@@ -96,6 +108,7 @@ for dt in list:
     dates1.write("\n")
     dates1.close()
     grass.run_command("r.in.gdal", input=dt, output=out2, overwrite=True)
+    #grass.run_command("r.import", input=dt, output=out2, extent="region", resolution="region")
     maps=OUTDAT / "maps.txt"
     grass.run_command("g.list", flags="m", type="rast", output=maps, overwrite=True)
 
@@ -108,6 +121,7 @@ with open(dates2, "w") as output_file:
 	        output_file.write(each_line)
 	        lines_seen.add(each_line)
 
+print('STEP 1: Averaging and multiplying by number of days per month')
 for t in months:
     #print(t)
     tmp=OUTDAT / "tmp.txt"
@@ -124,10 +138,12 @@ for t in months:
         #print(days)
         grass.run_command("r.mapcalc", expression=f'map_avg_{t}_month = map_avg_{t} * {days}', overwrite=True)
 
+print('STEP 2: Temporal interpolation - Applying Local Weighted Regression to the monthly maps')
 maps1=OUTDAT / "maps_lwr.txt"
 grass.run_command("g.list", type="rast", pattern='*_month$', output=maps1, overwrite=True)
 grass.run_command("r.series.lwr", flags="lh", file=maps1, suffix='_lwr', order=0, weight='tricube', fet=0.5, dod=2, maxgap=3, overwrite=True)
 
+print('STEP 3: Spatial interpolation - Applying Bspline to the monthly maps')
 for i in months:
     #print(i)
     grass.run_command("r.patch", input=f'map_avg_{i}_month,map_avg_{i}_month_lwr', output=f'map_avg_{i}_month_lwr_patch', overwrite=True)
@@ -145,6 +161,7 @@ grass.run_command("g.list", flags="m", type="rast")
 maps_out=OUTDAT / "maps_out.txt"
 grass.run_command("g.list", type="rast", pattern='*_gapfilled$', output=maps_out, overwrite=True)
 
+print('Exporting the gapfilled maps to geotif')
 with open(maps_out) as f:
   for dt1 in f:
         in1=dt1.strip('\n')
