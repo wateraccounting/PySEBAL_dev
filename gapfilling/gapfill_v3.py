@@ -76,7 +76,7 @@ user.open(gisdb=gisdb, location=jobid, mapset='TMPMAP',
                create_opts='')
 
 # using grass.script
-grass.run_command("g.extension", extension='r.series.lwr')
+ext=grass.run_command("g.extension", extension='r.series.lwr', flags=["a"])
 #grass.run_command("g.extension", extension='r.hants')
 #grass.run_command("g.mapsets",flags="l")
 grass.run_command("g.region", n=N, s=S, e=E, w=W, res=res, flags=["a"])
