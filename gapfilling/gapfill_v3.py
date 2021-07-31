@@ -4,6 +4,7 @@
 Sajid Pareeth, 2020
 The script does post processing of PySEBAL outputs.
 averaging, mm/day to mm/month, gap filling using gap filling
+This version with out patching
 '''
 
 import os
@@ -146,8 +147,8 @@ grass.run_command("r.series.lwr", flags="lh", file=maps1, suffix='_lwr', order=0
 print('STEP 3: Spatial interpolation - Applying Bspline to the monthly maps')
 for i in months:
     #print(i)
-    grass.run_command("r.patch", input=f'map_avg_{i}_month,map_avg_{i}_month_lwr', output=f'map_avg_{i}_month_lwr_patch', overwrite=True)
-    grass.run_command("r.fillnulls", input=f'map_avg_{i}_month_lwr_patch', output=f'map_avg_{i}_month_lwr_patch_fillnull', method='bilinear', npmin=600, segmax=300)
+    #grass.run_command("r.patch", input=f'map_avg_{i}_month,map_avg_{i}_month_lwr', output=f'map_avg_{i}_month_lwr_patch', overwrite=True)
+    grass.run_command("r.fillnulls", input=f'map_avg_{i}_month_lwr', output=f'map_avg_{i}_month_lwr_patch_fillnull', method='bilinear', npmin=600, segmax=300)
     grass.mapcalc('{r} = if({a} < 0, 0, {a})'.format(r=f'map_avg_{i}_month_lwr_patch_fillnull1', a=f'map_avg_{i}_month_lwr_patch_fillnull'))
     stats = grass.parse_command('r.univar', map=f'map_avg_{i}_month_lwr_patch_fillnull1', flags='eg', percentile='5,99')
     p2 = float(stats['percentile_5'])
