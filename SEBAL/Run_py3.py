@@ -9,9 +9,9 @@ import pysebal_py3
 ##### USER INPUTS
 
 ##### For Linux SET THE PATH TO INPUT EXCEL SHEET #####
-#inputExcel = r"/mnt/d/PySEBAL_dev/docs/InputEXCEL_v3_3_7_LIN.xlsx"
+#inputExcel = r"/mnt/d/PySEBAL_dev/test_data/InputEXCEL_v3_3_7_LIN.xlsx"
 ##### For Windows SET THE PATH TO INPUT EXCEL SHEET #####
-inputExcel = r"D:\PySEBAL_dev\docs\InputEXCEL_v3_3_7_WIN.xlsx"
+inputExcel = r"D:\PySEBAL_dev\test_data\InputEXCEL_v3_3_7_WIN.xlsx"
 st = 2 # starting row number
 en = 2 # ending row number
 
