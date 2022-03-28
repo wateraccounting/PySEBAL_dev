@@ -21,7 +21,7 @@ PySEBAL requires Python 3, (tested in python > 3.6).
 
 Source code
 ===========
-The PySEBAL library is hosted in a publicly available github repository. The library can be downloaded from `here <https://github.com/spareeth/PySEBAL_dev>`_. In the link select the latest ``version3.7.3`` and **Download ZIP**.
+The PySEBAL library is hosted in a publicly available github repository. The library can be downloaded from `here <https://github.com/wateraccounting/PySEBAL_dev>`_. In the link select the latest ``version3.7.3`` and **Download ZIP**.
 
 .. figure:: img/git3.png
    :align: center
@@ -45,7 +45,7 @@ Installing dependencies
 Following steps explain the installation procedure:
 **Step1 - Download the OSGeo4W installer**
 
-Get the OSGeo4W installer from this `link <https://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64-v1.exe>`_ .
+Get the OSGeo4W installer from this `link <http://download.osgeo.org/osgeo4w/v2/osgeo4w-setup.exe>`_ .
 
 **Step2 - Install the dependencies**
 
@@ -97,10 +97,9 @@ Double click the OSGeo4W installer
 
 The required libraries are:
 
- * qgis-ltr
- * grass (select version 7.8.5-1)
+ * qgis-ltr (latest long term release (ltr) version)
+ * grass (select version 7.8.7-2 or the latest)
  * qgis-ltr-grass-plugin7
- * msys
  * pyproj (select python3-pyproj)
  * pandas (select both python3-pandas and python3-geopandas packages)
  * scipy (select python3-scipy)
