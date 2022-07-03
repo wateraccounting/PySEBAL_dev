@@ -2501,7 +2501,8 @@ def Calc_Biomass_production(LAI,ETP_24,moisture_stress_biomass,ETA_24,Ra_mountai
     LUE = (LUEmax * heat_stress_biomass * vapor_stress_biomass * moisture_stress_biomass)
         
     # Dry matter production (kg/ha/d):
-    Biomass_prod = APAR * LUE * 0.864             # C3 vegetation
+    # Biomass_prod = APAR * LUE * 0.864             # C3 vegetation
+    # Biomass_prod = APAR * LUE             # Changed to NPP
 
     # Water productivity
     Biomass_wp = Biomass_prod/ (ETA_24 * 10)  # C3 vegetation
