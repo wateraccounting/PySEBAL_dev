@@ -65,12 +65,6 @@ Double click the OSGeo4W installer
        :align: center
        :width: 400
 
-   2. Select "Install from Local Directory" and click "Next", if you want to install from the source libraries provided to you in USB.
-
-    .. figure:: img/osgeo2b.png
-       :align: center
-       :width: 400
-
 * In this step select the root directory and access to users, keep default settings, and optionally "Create icon on Desktop" for easy access.
 
 .. figure:: img/osgeo3.png
@@ -116,12 +110,8 @@ Setting environment variables
 **Steps**
 
 * Right click "This PC" in Windows 10 **OR** "My Computer" in windows 7, go to *Properties* -> *Advaced system settings* -> *Advanced* tab -> *Environment variables* -> *System variables*.
-* Click new and add new system variables. Add the **Variable name** and **Variable value** as shown below. 
 
- * **GDAL_DATA** set to ``C:\OSGeo4W64\share\epsg_csv``
-
-* Edit the variable **Path** in the **System variables** to add the path ``C:\OSGeo4W64\bin`` to the end followed by a semicolon (;) in windows 7 **OR** add this path as a new line in the path variable in Windows 10.
-
+* Edit the variable **Path** in the **System variables** to add the path ``C:\OSGeo4W\bin`` to the end followed by a semicolon (;) in windows 7 **OR** add this path as a new line in the path variable in Windows 10.
 
 **Step3 - Install additional dependencies**
 
