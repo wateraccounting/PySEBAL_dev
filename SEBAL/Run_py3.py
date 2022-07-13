@@ -6,12 +6,36 @@ Created on 03 Dec 2019
 """
 
 import pysebal_py3
+import os
+from openpyxl import load_workbook
 ##### USER INPUTS
 
 ##### For Linux SET THE PATH TO INPUT EXCEL SHEET #####
 #inputExcel = r"/mnt/d/PySEBAL_dev/test_data/InputEXCEL_v3_3_7_LIN.xlsx"
-##### For Windows SET THE PATH TO INPUT EXCEL SHEET #####
-inputExcel = r"D:\PySEBAL_dev\test_data\InputEXCEL_v3_3_7_WIN.xlsx"
+
+current_wd = os.getcwd()
+dir_back = os.getcwd() + "\\..\\"
+os.chdir(dir_back)
+pySEBAL_Base_dir = os.getcwd()
+
+SEBAL_dir = pySEBAL_Base_dir + "\\SEBAL"
+os.chdir(SEBAL_dir)
+
+inputExcel = pySEBAL_Base_dir + "\\test_data\\InputEXCEL_v3_3_7_WIN.xlsx"
+input_dir = pySEBAL_Base_dir + "\\test_data\\input\\insat"
+output_dir = pySEBAL_Base_dir + "\\test_data\\output"
+DEM_dir = pySEBAL_Base_dir + "\\test_data\\input\\dem_dal.tif"
+
+
+workbook = load_workbook(filename=inputExcel)
+sheet = workbook['General_Input']
+
+sheet["B2"] = input_dir
+sheet["C2"] = output_dir
+sheet["E2"] = DEM_dir
+
+workbook.save(filename = inputExcel)
+
 st = 2 # starting row number
 en = 2 # ending row number
 
