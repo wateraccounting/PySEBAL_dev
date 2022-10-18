@@ -5,6 +5,8 @@ This tutorial explain steps to install a Linux kernel 'Windows Subsystem for Lin
 WSL provides a Windows subsystem with Ubuntu (or other distros like SUSE) Linux runs atop it. It is not a virtual machine or an application like Cygwin. It is complete Linux system inside Windows 10. It allows you to run the same Bash shell that you find on Linux. This way you can run Linux commands inside Windows without the needing to install a virtual machine, or dual boot Linux and Windows. You install Linux inside Windows like a regular application. This is a good option if your main aim is to learn Linux/Unix commands.
 You can find more information `here <https://itsfoss.com/install-bash-on-windows/>`_.
 
+Here's a `video <https://youtu.be/IHKCk81I33M>`_ explaining the procedure.
+
 Requirements
 ============
 
