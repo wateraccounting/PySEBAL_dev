@@ -91,9 +91,9 @@ Double click the OSGeo4W installer
 
 The required libraries are:
 
- * qgis-ltr (latest long term release (ltr - 3.22.8-1) version)
- * grass (select version 7.8.7-4)
- * qgis-ltr-grass-plugin7 (3.22.8-1)
+ * qgis-ltr (latest long term release (ltr version)
+ * grass (latest version)
+ * qgis-ltr-grass-plugin7 (select the same version as "qgis-ltr")
  * pyproj (select python3-pyproj)
  * pandas (select both python3-pandas and python3-geopandas packages)
  * scipy (select python3-scipy)
