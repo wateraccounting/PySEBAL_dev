@@ -16,6 +16,8 @@ import sys
 import os
 import re
 import shutil
+#import unpackqa
+#import rasterio
 import numpy as np
 import datetime
 from osgeo import osr  
@@ -50,8 +52,8 @@ def SEBALcode(number,inputExcel):
     os.makedirs(output_folder)	
  			
     # Start log file
-    filename_logfile = os.path.join(output_folder, 'log.txt')	
-    sys.stdout = open(filename_logfile, 'w')		
+    #filename_logfile = os.path.join(output_folder, 'log.txt')	
+    #sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
     DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
@@ -656,7 +658,7 @@ def SEBALcode(number,inputExcel):
     #tir_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_tir_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     #fpar_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_fpar_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     #b10_emissivity_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_b10_emissivity_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-    #cloud_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+    cloud_mask_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_cloud_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     surf_temp_fileName = os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     temp_surface_sharpened_fileName =  os.path.join(output_folder, 'Output_vegetation', '%s_surface_temp_sharpened_%s_%s_%s_%s_%s.tif' %(sensor1, res1, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
     snow_mask_fileName = os.path.join(output_folder, 'Output_evapotranspiration', '%s_snow_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
@@ -703,7 +705,7 @@ def SEBALcode(number,inputExcel):
     # Define name that is only needed in Image type 1 (Landsat)			
     if Image_Type == 1:	   
        ndvi_fileName2 = os.path.join(output_folder, 'Output_vegetation', '%s_NDVI_%s_%s_%s_%s_%s.tif' %(sensor3, res3, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
-       #QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
+       QC_Map_fileName = os.path.join(output_folder, 'Output_temporary', '%s_quality_mask_%s_%s_%s_%s_%s.tif' %(sensor1, res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
        proyDEM_fileName_90 = os.path.join(output_folder, 'Output_temporary', 'proy_DEM_90.tif')
 
     # Names for PROBA-V and VIIRS option
@@ -1047,7 +1049,7 @@ def SEBALcode(number,inputExcel):
         # Define bands used for each Landsat number
         if Landsat_nr == 5 or Landsat_nr == 7:
             Bands = np.array([1, 2, 3, 4, 5, 7, 6])
-        elif Landsat_nr == 8:
+        elif Landsat_nr == 8 or Landsat_nr == 9:
            Bands = np.array([2, 3, 4, 5, 6, 7, 10, 11])  
         else:
             print('Landsat image not supported, use Landsat 7 or 8')
@@ -1141,7 +1143,7 @@ def SEBALcode(number,inputExcel):
                 ClipLandsat=np.where(np.logical_or(np.logical_or(np.logical_or(np.logical_or(np.logical_or(np.logical_or(ls_data==0,ls_data_2==0),ls_data_3==0),ls_data_4==0),ls_data_5==0),ls_data_6==0),ls_data_7==0),0,1)
 
             # If landsat 8 then use landsat band 10 and 11
-            elif Landsat_nr == 8:
+            elif Landsat_nr == 8 or Landsat_nr == 9:
                  src_FileName_11 = os.path.join(input_folder, '%s_B11.TIF' % (Name_Landsat_Image)) #open smallest band
                  ls_data_11=Open_landsat(src_FileName_11,proyDEM_fileName)
 
@@ -1155,22 +1157,36 @@ def SEBALcode(number,inputExcel):
             else:
                 print('Landsat image not supported, use Landsat 7 or 8')
 
-            # Create Cloud mask is BQA map is available (newer version Landsat images)
+            # Create Cloud mask is BQA map is available (newer version Landsat images)            
             BQA_LS_Available = 0
-            if os.path.exists(os.path.join(input_folder, '%s_BQA.TIF' %Name_Landsat_Image)):
-                src_FileName_BQA = os.path.join(input_folder, '%s_BQA.TIF' %Name_Landsat_Image)
+            if os.path.exists(os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)):
+                src_FileName_BQA = os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)
                 ls_data_BQA = Open_landsat(src_FileName_BQA,proyDEM_fileName)
-                if Landsat_nr == 8:
-                    Cloud_Treshold = 3000
-                if Landsat_nr == 5 or Landsat_nr == 7:
-                    Cloud_Treshold = 700                    
+                #L8_qa_product = 'LANDSAT_8_C2_L2_QAPixel'
+                #with rasterio.open(src_FileName_BQA) as src:
+                #    img_qa_data = src.read(1)
+                #img_qa_data = rasterio.open(ls_data_BQA)
+                #QC_mask_Cloud = unpackqa.unpack_to_array(img_qa_data, 
+                #                                   product=L8_qa_product,
+                #                                   flags=['Cloud'])
+                #QC_mask_Cloud[ls_data_BQA!=1] = 0
+                #QC_mask_Cloud[ls_data_BQA==1] = 1
+                #print('Original Scene Shape: {}'.format(img_qa_data.shape))
+                #print('Cloud and Shadow mask shape: {}'.format(cloud_and_shadow_mask.shape))
                 QC_mask_Cloud = np.copy(ls_data_BQA)
+                #QC_mask_Cloud = cloud_and_shadow_mask.sum(axis=-1) > 0
+                if Landsat_nr == 8 or Landsat_nr == 9:
+                    Cloud_Treshold = 30000
+                if Landsat_nr == 5 or Landsat_nr == 7:
+                    Cloud_Treshold = 700
+                #QC_mask_Cloud = np.copy(ls_data_BQA)
                 QC_mask_Cloud[ls_data_BQA<Cloud_Treshold] = 0
                 QC_mask_Cloud[ls_data_BQA>=Cloud_Treshold] = 1                             
-                BQA_LS_Available = 1               
-                
+                BQA_LS_Available = 1         
+                     
+            #pdb.set_trace()
 
-            # Open data of the landsat mask                            
+            # Open data of the landsat mask
             ls_data=Open_landsat(src_FileName, proyDEM_fileName)
        
             # Save Landsat mask as a tiff file							
@@ -1395,7 +1411,7 @@ def SEBALcode(number,inputExcel):
                     cloud_mask = Create_Buffer(cloud_mask)                
            
                 # Save output maps
-                #save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1)
+                save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1)
                 #save_GeoTiff_proy(lsc, snow_mask, snow_mask_fileName, shape_lsc, nband=1)                  
                 #save_GeoTiff_proy(lsc, shadow_mask, shadow_mask_fileName, shape_lsc, nband=1)
     
@@ -1406,7 +1422,7 @@ def SEBALcode(number,inputExcel):
                 QC_Map[Landsat_Mask>0] = 1								
 											
                 # Output folder QC defined by the user							
-                #QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif.tif' %(sensor1, res2, year, DOY))
+                QC_Map_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif.tif' %(sensor1, res2, year, DOY))
 											
                 # Save the PROBA-V NDVI as tif file												
                 #save_GeoTiff_proy(lsc, QC_Map, QC_Map_fileName, shape, nband=1)
@@ -1854,7 +1870,7 @@ def SEBALcode(number,inputExcel):
         try: 
             if (ws['F%d' % number].value) is not None:					
                 # Output folder QC defined by the user							
-                #QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s.tif.tif' %(res2, year, DOY))
+                QC_fileName = os.path.join(output_folder, 'Output_cloud_masked', 'User_quality_mask_%s_%s_%s.tif.tif' %(res2, year, DOY))
           
                 # Reproject and reshape users NDVI  
                 QC_Map = Reshape_Reproject_Input_data(r'%s' %str(ws['F%d' % number].value),QC_fileName, proyDEM_fileName)		 														 
@@ -1870,7 +1886,7 @@ def SEBALcode(number,inputExcel):
                     QC_Map = np.zeros((shape_lsc[1], shape_lsc[0]))
 					
                 # Define users QC output name																
-                #QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif' %(sensor1, res2, year, DOY))
+                QC_tot_fileName = os.path.join(output_folder, 'Output_cloud_masked', '%s_quality_mask_%s_%s_%s.tif' %(sensor1, res2, year, DOY))
       										
                  # Save the QC map as tif file											
                 save_GeoTiff_proy(lsc, QC_Map, QC_tot_fileName, shape_lsc, nband=1)
@@ -2436,6 +2452,7 @@ def SEBALcode(number,inputExcel):
     try:
         shutil.rmtree(os.path.join(output_folder, 'Output_temporary'))
         shutil.rmtree(os.path.join(output_folder, 'Output_radiation_balance'))
+        shutil.rmtree(os.path.join(output_folder, 'Output_cloud_masked'))
     except OSError as e:
         print ('Error: folder does not exist')
 
@@ -3049,7 +3066,7 @@ def Calc_surface_temp(Temp_inst,Landsat_nr,Lmax,Lmin,therm_data,b10_emissivity,k
     """ 
     
     # Spectral radiance for termal
-    if Landsat_nr == 8:
+    if Landsat_nr == 8 or Landsat_nr == 9:
         if Bands_thermal == 1:
             k1 = k1_c[0]
             k2 = k2_c[0]
@@ -3265,7 +3282,7 @@ def Landsat_Reflect(Bands,input_folder,Name_Landsat_Image,output_folder,shape_ls
         # stats = band_data.GetStatistics(0, 1)
 
         index = np.where(Bands[:-(len(Bands)-6)] == band)[0][0]
-        if Landsat_nr == 8:
+        if Landsat_nr == 8 or Landsat_nr == 9:
             # Spectral radiance for each band:
             L_lambda = Landsat_L_lambda(Lmin, Lmax, ls_data, index, Landsat_nr)
             # Reflectivity for each band:
@@ -3294,7 +3311,7 @@ def Landsat_L_lambda(Lmin,Lmax,ls_data,index,Landsat_nr):
     """
     Calculates the lambda from landsat
     """
-    if Landsat_nr==8:
+    if Landsat_nr==8 or Landsat_nr == 9:
         L_lambda = ((Lmax[index] - Lmin[index]) / (65535 - 1) * ls_data + Lmin[index]) 
     elif Landsat_nr == 5 or Landsat_nr ==7:
         L_lambda = (Lmax[index] - Lmin[index]) / 255 * ls_data + Lmin[index]
