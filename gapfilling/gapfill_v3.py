@@ -117,8 +117,8 @@ for dt in list:
 dates2=OUTDAT / "dates_NW.txt"
 lines_seen = set() # holds lines already seen
 with open(dates2, "w") as output_file:
-	for each_line in open(dates, "r"):
-	    if each_line not in lines_seen: # check if line is not duplicate
+    for each_line in open(dates, "r"):
+        if each_line not in lines_seen: # check if line is not duplicate
             output_file.write(each_line)
             lines_seen.add(each_line)
 
@@ -178,6 +178,6 @@ for item in files_text:
 
 user.close()
 
-os.remove(tmp)
+#os.remove(tmp)
 if os.path.exists(locpth) and os.path.isdir(locpth):
     shutil.rmtree(locpth)
