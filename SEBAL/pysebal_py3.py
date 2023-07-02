@@ -46,8 +46,7 @@ def SEBALcode(number,inputExcel):
     # Create or empty output folder		
     if os.path.isdir(output_folder):
         shutil.rmtree(output_folder)
-    os.makedirs(output_folder)	
- 			
+    os.makedirs(output_folder)
     # Start log file
     #filename_logfile = os.path.join(output_folder, 'log.txt')	
     #sys.stdout = open(filename_logfile, 'w')		
