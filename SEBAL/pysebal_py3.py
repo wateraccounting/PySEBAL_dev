@@ -16,8 +16,6 @@ import sys
 import os
 import re
 import shutil
-#import unpackqa
-#import rasterio
 import numpy as np
 import datetime
 from osgeo import osr  
@@ -35,9 +33,8 @@ def SEBALcode(number,inputExcel):
     # Do not show warnings
     warnings.filterwarnings('ignore')  
     
-    # Open Excel workbook	
+    # Open Excel workbook
     wb = load_workbook(inputExcel)
-			
     # Open the General_Input sheet			
     ws = wb['General_Input']
  			
@@ -56,8 +53,7 @@ def SEBALcode(number,inputExcel):
     #sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
-    DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
-	 		
+    DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'
     # Print data used from sheet General_Input
     print ('.................................................................. ')
     print ('......................SEBAL Model running ........................ ')
@@ -2519,6 +2515,7 @@ def Calc_Biomass_production(LAI,ETP_24,moisture_stress_biomass,ETA_24,Ra_mountai
         
     # Dry matter production (kg/ha/d):
     Biomass_prod = APAR * LUE * 0.864             # C3 vegetation
+    # What is 0.864? Is it AOT? to convert DMP to Above ground biomass?
     # Biomass_prod = APAR * LUE             # Changed to NPP
 
     # Water productivity

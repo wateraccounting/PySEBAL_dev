@@ -40,19 +40,19 @@ res=30
 
 # Input directory where all the PySEBAL outputs are stored, Eg: All ETa maps in one folder
 # THIS FOLDER SHOULD NOT HAVE ANY OTHER FILES
-INDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa_Input")
+INDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa Input")
 # Empty output folder where the gap-filled files will be stored
-OUTDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa_Output") 
+OUTDAT=Path("D:\\Module11\\PySEBAL_gapfill\\ETa Output") 
 # CRS of the input maps. Output maps will be in the same CRS
-CRS='EPSG:32638' 
+CRS='EPSG:32638'
 # A temporary folder (Empty) to process the files.
-gisdb='D:\\grasstemp' 
+gisdb='D:\\grasstemp'
 # START year and month
 ST='2018_10'
 # End year and month
 EN='2019_09'
 # The variable to post process. "ETa" for Actual EvapoTranspiration, "BIO" for Biomass Production, "ST" for surface temperature; "NDVI" for ndvi maps 
-VAR="ETa" 
+VAR="ETa"
 ##USER INPUTS FINISH HERE ###
 
 jobid=str(uuid.uuid4())
@@ -119,8 +119,8 @@ lines_seen = set() # holds lines already seen
 with open(dates2, "w") as output_file:
 	for each_line in open(dates, "r"):
 	    if each_line not in lines_seen: # check if line is not duplicate
-	        output_file.write(each_line)
-	        lines_seen.add(each_line)
+            output_file.write(each_line)
+            lines_seen.add(each_line)
 
 print('STEP 1: Averaging and multiplying by number of days per month')
 for t in months:
@@ -178,5 +178,6 @@ for item in files_text:
 
 user.close()
 
+os.remove(tmp)
 if os.path.exists(locpth) and os.path.isdir(locpth):
     shutil.rmtree(locpth)
