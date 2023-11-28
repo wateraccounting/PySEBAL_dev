@@ -12,10 +12,15 @@ import traceback
 #inputExcel = r"/mnt/d/PySEBAL_dev/test_data/InputEXCEL_v3_3_7_LIN.xlsx"
 ##### For Windows SET THE PATH TO INPUT EXCEL SHEET #####
 inputExcel = r"D:\PySEBAL_dev\test_data\InputEXCEL_v3_3_7_WIN.xlsx"
+dataPath = # Data folder location here
+imgType = 1 # Landsat
 st = 2 # starting row number
 en = 2 # ending row number
 
 ####### USER INPUTS FINISH HERE
+
+# Fill in the spreadhseet
+pysebal_xl_py3(dataPath, inputExcel, imgType).fill_xl()
 
 for number in range(st, en + 1):
     try:
