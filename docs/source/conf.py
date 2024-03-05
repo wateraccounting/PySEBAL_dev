@@ -181,7 +181,7 @@ copyright = "Sajid Pareeth © 2021 IHE Delft Institute for Water Education"
 
 # -- Extension configuration -------------------------------------------------
 def setup(app):
-    app.add_stylesheet('custom.css')
+    app.add_css_file('custom.css')
 
 # -- to add colors -------------------------------------------------
 rst_prolog = """
