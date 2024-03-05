@@ -16,6 +16,8 @@ import sys
 import os
 import re
 import shutil
+#import unpackqa
+import rasterio #---amir
 import numpy as np
 import datetime
 from osgeo import osr  
@@ -33,8 +35,9 @@ def SEBALcode(number,inputExcel):
     # Do not show warnings
     warnings.filterwarnings('ignore')  
     
-    # Open Excel workbook
+    # Open Excel workbook	
     wb = load_workbook(inputExcel)
+			
     # Open the General_Input sheet			
     ws = wb['General_Input']
  			
@@ -46,13 +49,15 @@ def SEBALcode(number,inputExcel):
     # Create or empty output folder		
     if os.path.isdir(output_folder):
         shutil.rmtree(output_folder)
-    os.makedirs(output_folder)
+    os.makedirs(output_folder)	
+ 			
     # Start log file
     #filename_logfile = os.path.join(output_folder, 'log.txt')	
     #sys.stdout = open(filename_logfile, 'w')		
  		
     # Extract the Path to the DEM map from the excel file
-    DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'
+    DEM_fileName = r"%s" %str(ws['E%d' %number].value) #'DEM_HydroShed_m'  
+	 		
     # Print data used from sheet General_Input
     print ('.................................................................. ')
     print ('......................SEBAL Model running ........................ ')
@@ -1154,30 +1159,54 @@ def SEBALcode(number,inputExcel):
 
             # Create Cloud mask is BQA map is available (newer version Landsat images)            
             BQA_LS_Available = 0
+            
+            #---- Amir
             if os.path.exists(os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)):
-                src_FileName_BQA = os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)
+                src_FileName_BQA = os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)    
+                
                 ls_data_BQA = Open_landsat(src_FileName_BQA,proyDEM_fileName)
-                #L8_qa_product = 'LANDSAT_8_C2_L2_QAPixel'
-                #with rasterio.open(src_FileName_BQA) as src:
-                #    img_qa_data = src.read(1)
-                #img_qa_data = rasterio.open(ls_data_BQA)
-                #QC_mask_Cloud = unpackqa.unpack_to_array(img_qa_data, 
-                #                                   product=L8_qa_product,
-                #                                   flags=['Cloud'])
-                #QC_mask_Cloud[ls_data_BQA!=1] = 0
-                #QC_mask_Cloud[ls_data_BQA==1] = 1
-                #print('Original Scene Shape: {}'.format(img_qa_data.shape))
-                #print('Cloud and Shadow mask shape: {}'.format(cloud_and_shadow_mask.shape))
-                QC_mask_Cloud = np.copy(ls_data_BQA)
-                #QC_mask_Cloud = cloud_and_shadow_mask.sum(axis=-1) > 0
-                if Landsat_nr == 8 or Landsat_nr == 9:
-                    Cloud_Treshold = 30000
-                if Landsat_nr == 5 or Landsat_nr == 7:
-                    Cloud_Treshold = 700
+                
+                QC_mask_Cloud_new = cloudmasking(src_FileName_BQA)
+                #QC_mask_Cloud2 = Open_landsat(src_QC_mask_Cloud_new,proyDEM_fileName)
+                src_FileName_BQA_new = os.path.join(input_folder, '%s_QA_PIXEL_masked.TIF' %Name_Landsat_Image)
+                ls_data_BQA_new = Open_landsat(src_FileName_BQA_new,proyDEM_fileName)
                 #QC_mask_Cloud = np.copy(ls_data_BQA)
-                QC_mask_Cloud[ls_data_BQA<Cloud_Treshold] = 0
-                QC_mask_Cloud[ls_data_BQA>=Cloud_Treshold] = 1                             
-                BQA_LS_Available = 1         
+                ##QC_mask_Cloud_new = np.where(ls_data_BQA,QC_mask_Cloud_new,np.nan)
+                
+                #QC_mask_Cloud[QC_mask_Cloud2 >= ls_data_BQA] = 1
+                #QC_mask_Cloud[QC_mask_Cloud2 < ls_data_BQA] = 0
+                bank = np.subtract(ls_data_BQA, ls_data_BQA_new)
+                QC_mask_Cloud = np.where( bank == 0.0 , 1, 0)
+
+                BQA_LS_Available = 1 
+
+            
+            
+            #-------- make it comment ##mean commented before , # commented now
+            #if os.path.exists(os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)):
+                #src_FileName_BQA = os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)
+                #ls_data_BQA = Open_landsat(src_FileName_BQA,proyDEM_fileName)
+                ##L8_qa_product = 'LANDSAT_8_C2_L2_QAPixel'
+                ##with rasterio.open(src_FileName_BQA) as src:
+                ##    img_qa_data = src.read(1)
+                ##img_qa_data = rasterio.open(ls_data_BQA)
+                ##QC_mask_Cloud = unpackqa.unpack_to_array(img_qa_data, 
+                ##                                   product=L8_qa_product,
+                ##                                   flags=['Cloud'])
+                ##QC_mask_Cloud[ls_data_BQA!=1] = 0
+                ##QC_mask_Cloud[ls_data_BQA==1] = 1
+                ##print('Original Scene Shape: {}'.format(img_qa_data.shape))
+                ##print('Cloud and Shadow mask shape: {}'.format(cloud_and_shadow_mask.shape))
+                #QC_mask_Cloud = np.copy(ls_data_BQA)
+                ##QC_mask_Cloud = cloud_and_shadow_mask.sum(axis=-1) > 0
+                #if Landsat_nr == 8 or Landsat_nr == 9:
+                #    Cloud_Treshold = 22000   #---Amir! default 30000 ---> change to 22000 
+                #if Landsat_nr == 5 or Landsat_nr == 7:
+                #    Cloud_Treshold = 700
+                #QC_mask_Cloud = np.copy(ls_data_BQA)
+                #QC_mask_Cloud[ls_data_BQA<Cloud_Treshold] = 0
+                #QC_mask_Cloud[ls_data_BQA>=Cloud_Treshold] = 1                             
+                #BQA_LS_Available = 1         
                      
             #pdb.set_trace()
 
@@ -1297,16 +1326,19 @@ def SEBALcode(number,inputExcel):
                 surf_temp_fileName = os.path.join(output_folder, 'Output_vegetation','User_surface_temp_%s_%s_%s_%s_%s.tif' %(res2, year, str(mon).zfill(2), str(day).zfill(2), str(DOY).zfill(3)))
                 temp_surface_sharpened=Reshape_Reproject_Input_data(r'%s' %str(ws['E%d' % number].value),surf_temp_fileName,proyDEM_fileName)		 					
                 cloud_mask = np.zeros([int(np.shape(temp_surface_sharpened)[1]),int(np.shape(temp_surface_sharpened)[0])])
-                Thermal_Sharpening_not_needed = 1		 									
+                Thermal_Sharpening_not_needed = 1		 		
+                
             else:
                 
                 # Calculate surface temperature and create a cloud mask
                 Surface_temp,cloud_mask = Calc_surface_temp(Temp_inst, Landsat_nr, Lmax, Lmin, therm_data, b10_emissivity, k1_c, k2_c, eact_inst, shape_lsc, water_mask_temp, Bands_thermal, Rp, tau_sky, surf_temp_offset, Image_Type)    
                 Thermal_Sharpening_not_needed = 0	
                 
-                # Replace clouds mask is a better one is already created
+                # Replace clouds mask is a better one is already created  # amir delete space before if
                 if BQA_LS_Available == 1:
                     cloud_mask = QC_mask_Cloud
+                    Surface_temp[cloud_mask == 1] = np.nan
+                    print("BQA available")
                 
                 Surface_temp[cloud_mask == 1] = np.nan
                 
@@ -1392,18 +1424,18 @@ def SEBALcode(number,inputExcel):
                 else:
                     ts_cold_land=Temperature_water_mean
     
-                # Make shadow mask
-                mask=np.zeros((shape_lsc[1], shape_lsc[0]))
-                mask[np.logical_and.reduce((temp_surface_sharpened < (ts_cold_land+Temperature_offset_shadow),Surf_albedo < Maximum_shadow_albedo,water_mask!=1))]=1
-                shadow_mask=np.copy(mask)
-                shadow_mask = Create_Buffer(shadow_mask)
+                # Make shadow mask ---#amir commented
+                #mask=np.zeros((shape_lsc[1], shape_lsc[0]))
+                #mask[np.logical_and.reduce((temp_surface_sharpened < (ts_cold_land+Temperature_offset_shadow),Surf_albedo < Maximum_shadow_albedo,water_mask!=1))]=1
+                #shadow_mask=np.copy(mask)
+                #shadow_mask = Create_Buffer(shadow_mask)
        
-                # Make cloud mask
-                if BQA_LS_Available != 1:
-                    mask=np.zeros((shape_lsc[1], shape_lsc[0]))
-                    mask[np.logical_and.reduce((temp_surface_sharpened < (ts_cold_land+Temperature_offset_clouds),Surf_albedo > Minimum_cloud_albedo,NDVI<0.7,snow_mask!=1))]=1
-                    cloud_mask=np.copy(mask)
-                    cloud_mask = Create_Buffer(cloud_mask)                
+                # Make cloud mask ---#amir commented
+                #if BQA_LS_Available != 1:
+                    #mask=np.zeros((shape_lsc[1], shape_lsc[0]))
+                    #mask[np.logical_and.reduce((temp_surface_sharpened < (ts_cold_land+Temperature_offset_clouds),Surf_albedo > Minimum_cloud_albedo,NDVI<0.7,snow_mask!=1))]=1
+                    #cloud_mask=np.copy(mask)
+                    #cloud_mask = Create_Buffer(cloud_mask)                
            
                 # Save output maps
                 save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1)
@@ -1424,7 +1456,11 @@ def SEBALcode(number,inputExcel):
                 #save_GeoTiff_proy(dest, QC_Map, QC_Map_fileName, shape, nband=1)								  
 
         except:                
-            assert "Please check the quality path"									
+            assert "Please check the quality path"
+        
+        #QC_mask_Cloud
+        #save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1) #amir
+        save_GeoTiff_proy(lsc, bank, cloud_mask_fileName, shape_lsc, nband=1) #amir
             
     # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
@@ -2380,6 +2416,8 @@ def SEBALcode(number,inputExcel):
     # Daily Evaporation and advection factor
     ETA_24, AF=Calc_ETact(esat_24,eact_24,EF_inst,Rn_24,Refl_rad_water,Lhv)
     
+
+    
     # Bulk surface resistance (s/m):
     bulk_surf_resis_24=Calc_Bulk_surface_resistance(sl_es_24,Rn_24,Refl_rad_water,air_dens,esat_24,eact_24,rah_pm_act,ETA_24,Lhv,Psychro_c)
      
@@ -2388,7 +2426,8 @@ def SEBALcode(number,inputExcel):
     ETP_24 = np.where(ETpot_24 < ETA_24, ETA_24, ETpot_24)
     ET_24_deficit = ETP_24 - ETA_24
     kc_max = ETP_24 / ETref_24
-
+    
+    
     # Save files   
     #save_GeoTiff_proy(lsc, rs_min, min_bulk_surf_res_fileName, shape_lsc, nband=1)
     save_GeoTiff_proy(lsc, EF_inst, EF_inst_fileName, shape_lsc, nband=1)
@@ -2447,7 +2486,7 @@ def SEBALcode(number,inputExcel):
     try:
         shutil.rmtree(os.path.join(output_folder, 'Output_temporary'))
         shutil.rmtree(os.path.join(output_folder, 'Output_radiation_balance'))
-        shutil.rmtree(os.path.join(output_folder, 'Output_cloud_masked'))
+        #shutil.rmtree(os.path.join(output_folder, 'Output_cloud_masked')) #-amir
     except OSError as e:
         print ('Error: folder does not exist')
 
@@ -2514,7 +2553,6 @@ def Calc_Biomass_production(LAI,ETP_24,moisture_stress_biomass,ETA_24,Ra_mountai
         
     # Dry matter production (kg/ha/d):
     Biomass_prod = APAR * LUE * 0.864             # C3 vegetation
-    # What is 0.864? Is it AOT? to convert DMP to Above ground biomass?
     # Biomass_prod = APAR * LUE             # Changed to NPP
 
     # Water productivity
@@ -2879,6 +2917,13 @@ def Correct_Surface_Temp(Temp_24,Surface_temp,Temp_lapse_rate,DEM_resh,Pair,dr,T
     #          Gsc * dr * Transm_corr * cos_zenith_flat) / (air_dens * 1004 * 0.050))
     ts_dem[ClipLandsat==1]=np.nan
     ts_dem[ts_dem==0]=np.nan
+    
+   
+    #--amir
+    ts_dem[Surface_temp == np.nan] = np.nan
+    
+    
+    
     ts_dem=ts_dem.clip(273,350)         
   
     return(ts_dem,air_dens,Temp_corr)
@@ -4230,3 +4275,38 @@ def Run_command_window(argument):
     process.wait()  
     
     return()
+
+#----Amir
+def cloudmasking(image_path):
+
+    # opening the QA band of landsat 8/9
+    with rasterio.open(image_path) as src:
+        qa_band = src.read(1)
+        image = src.read()
+
+    #cloud bits
+    clearbit = 0
+    cloudbit = 3
+    cloud_shadow = 4 #shadow
+
+    #create mask
+    cloudmask = (qa_band & (1 << cloudbit)) == 0
+    shadowmask = (qa_band & (1 << cloud_shadow)) == 0
+    combinmask = cloudmask & shadowmask
+
+    # create a masked from orginal
+    masked_image = np.ma.array(image, mask=np.expand_dims(combinmask, axis = 0))
+
+    # Create metadata for the masked image
+    metadata = src.meta.copy()
+    metadata.update({
+    'count': masked_image.shape[0],
+    'height': masked_image.shape[1],
+    'width': masked_image.shape[2]})   
+
+    #saving
+    masked_image_path = image_path.replace(".TIF", "_masked.TIF")
+    
+    with rasterio.open(masked_image_path, 'w', **metadata) as dst:
+        dst.write(masked_image)
+    return(masked_image)

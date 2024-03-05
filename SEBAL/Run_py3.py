@@ -4,14 +4,16 @@ Created on 03 Dec 2019
 
 @author: tih, sajid pareeth
 """
+
 import pysebal_py3
-import traceback
+import traceback # amir
+
 ##### USER INPUTS
 
 ##### For Linux SET THE PATH TO INPUT EXCEL SHEET #####
 #inputExcel = r"/mnt/d/PySEBAL_dev/test_data/InputEXCEL_v3_3_7_LIN.xlsx"
 ##### For Windows SET THE PATH TO INPUT EXCEL SHEET #####
-inputExcel = r"D:\PySEBAL_dev\test_data\InputEXCEL_v3_3_7_WIN.xlsx"
+inputExcel = r"D:\testing_folder\datas\InputEXCEL_v3_3_7_part2.xlsx"
 st = 2 # starting row number
 en = 2 # ending row number
 
@@ -28,4 +30,4 @@ for number in range(st, en + 1):
         print ('\n******* ERROR *******\n')
         traceback.print_exc()
         
-        print ('\n--------------------\n')
+        print ('\n--------------------\n')        
