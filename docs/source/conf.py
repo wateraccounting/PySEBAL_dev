@@ -106,7 +106,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PySEBAL_docdoc'
+htmlhelp_basename = 'PySEBAL_doc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -177,7 +177,7 @@ epub_title = project
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
-copyright = "Sajid Pareeth © 2021 IHE Delft Institute for Water Education"
+copyright = "Sajid Pareeth © 2024 IHE Delft Institute for Water Education"
 
 # -- Extension configuration -------------------------------------------------
 def setup(app):
