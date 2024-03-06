@@ -1180,7 +1180,7 @@ def SEBALcode(number,inputExcel):
 
                 BQA_LS_Available = 1 
 
-            
+                save_GeoTiff_proy(lsc, bank, cloud_mask_fileName, shape_lsc, nband=1) #amir
             
             #-------- make it comment ##mean commented before , # commented now
             #if os.path.exists(os.path.join(input_folder, '%s_QA_PIXEL.TIF' %Name_Landsat_Image)):
@@ -1460,7 +1460,6 @@ def SEBALcode(number,inputExcel):
         
         #QC_mask_Cloud
         #save_GeoTiff_proy(lsc, cloud_mask, cloud_mask_fileName, shape_lsc, nband=1) #amir
-        save_GeoTiff_proy(lsc, bank, cloud_mask_fileName, shape_lsc, nband=1) #amir
             
     # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
