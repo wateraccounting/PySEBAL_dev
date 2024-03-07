@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-PySEBAL_dev_v3.8
+PySEBAL_dev_v4
 
 @author: Tim Hessels, Jonna van Opstal, Patricia Trambauer, Wim Bastiaanssen, Mohamed Faouzi Smiej, Yasir Mohamed, and Ahmed Er-Raji
          UNESCO-IHE
@@ -62,7 +62,7 @@ def SEBALcode(number,inputExcel):
     print ('.................................................................. ')
     print ('......................SEBAL Model running ........................ ')
     print ('.................................................................. ')
-    print ('pySEBAL version 3.3.7.1 Github')
+    print ('PySEBAL version 4 Github')
     print ('General Input:')
     print(('Path to DEM file = %s' %str(DEM_fileName)))
     print(('input_folder = %s' %str(input_folder)))
